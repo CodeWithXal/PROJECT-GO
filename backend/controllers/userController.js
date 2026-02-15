@@ -1,8 +1,4 @@
-const {Router} = require("express");
-const userRouter = Router();
-const jwt_secret = process.env.JWT_AUTH_SECRET;
-const {authMiddleware} = require("../middleware/auth_Middleware");
-const userAuth = authMiddleware(jwt_secret);
+const {userModel} = require("../models/users");
 
 
 // Complete Profile Function
@@ -11,24 +7,26 @@ async function completeProfile(req, res){
     const {bio, skills, education, experience} = req.body;
 
     try{
-        await userModel.findByIdAndUpdate(req.userId, {
+        const updatedUser = await userModel.findByIdAndUpdate(req.userId, {
             bio,
             skills,
             education,
             experience,
-            profile_completed:true
-        });
+            profileCompleted:true
+        },{ returnDocument: "after" });
 
         res.json({
-            message : "Profile completed"
+            message : "Profile completed",
+            profileCompleted: updatedUser.profileCompleted
         });
     }
     catch(err){
         res.json({
             message : "Error Updating Profile",
-            error : err
+            error : err.message
         });
     }
 }
 
-userRouter.put("/complete-profile", userAuth, completeProfile);
+
+module.exports = {completeProfile}

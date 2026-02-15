@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db.js");
 const {authRouter} = require("./routes/auth");
-const {userRouter} = require("./models/users.js")
+const {userRouter} = require("./routes/user.js")
 
 const app = express();
 app.use(cors());

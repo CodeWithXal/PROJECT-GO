@@ -31,8 +31,8 @@ const userSchema = new mongoose.Schema(
             type:String,
             default:""
         },
-        profile_completed:{
-            type:boolean,
+        profileCompleted:{
+            type:Boolean,
             default:false
         }
     },{timestamps:true}

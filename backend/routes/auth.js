@@ -77,7 +77,7 @@ async function signin(req, res){
     })
 
     if(!user){
-        res.status(400).json({
+        return res.status(400).json({
             message : "User not found"
         })
     }
@@ -92,7 +92,8 @@ async function signin(req, res){
         },jwt_secret)
         res.json({
             message : "signed in successfully",
-            token : token
+            token : token,
+            profileCompleted : user.profileCompleted
         });
     }
 
@@ -104,15 +105,11 @@ async function signin(req, res){
     
 }
 
-if(user.profileCompleted){
-    redirect("/complete-profile")
-}
+
 
 
 
 authRouter.post("/signup", signup);
 authRouter.post("/signin", signin);
 
-module.exports = {
-    authRouter : authRouter
-}
+module.exports = {authRouter};
