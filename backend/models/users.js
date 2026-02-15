@@ -22,6 +22,18 @@ const userSchema = new mongoose.Schema(
         bio:{
             type:String,
             default:""
+        },
+        education:{
+            type:String,
+            default:""
+        },
+        experience:{
+            type:String,
+            default:""
+        },
+        profile_completed:{
+            type:boolean,
+            default:false
         }
     },{timestamps:true}
 );

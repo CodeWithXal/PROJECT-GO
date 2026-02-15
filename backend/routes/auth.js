@@ -2,10 +2,13 @@ require("dotenv").config();
 const{z} = require("zod");
 const bcrypt = require("bcrypt");
 const {Router} = require("express");
+const jwt = require("jsonwebtoken");
+const jwt_secret = process.env.JWT_AUTH_SECRET;
 const {userModel} = require("../models/users");
 const authRouter = Router();
 
 
+// sign up function 
 
 async function signup(req, res){
 
@@ -74,16 +77,22 @@ async function signin(req, res){
     })
 
     if(!user){
-        res.ststus(400).json({
+        res.status(400).json({
             message : "User not found"
         })
     }
 
     const password_match = await bcrypt.compare(password, user.password);
+    
+    //JWT
 
-    if(password){
+    if(password_match){
+        const token = jwt.sign({
+            id : user.id  
+        },jwt_secret)
         res.json({
-            message : "signed in successfully"
+            message : "signed in successfully",
+            token : token
         });
     }
 
@@ -92,8 +101,11 @@ async function signin(req, res){
             message : "Email or Password is Incorrect"
         });
     }
+    
+}
 
-    // do the jwt 
+if(user.profileCompleted){
+    redirect("/complete-profile")
 }
 
 

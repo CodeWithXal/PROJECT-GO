@@ -2,7 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db.js");
-const {authRouter} = require("./routes/auth")
+const {authRouter} = require("./routes/auth");
+const {userRouter} = require("./models/users.js")
 
 const app = express();
 app.use(cors());
@@ -11,6 +12,8 @@ app.use("/api/auth",authRouter)
 app.get("/", (req , res) =>{
     res.send("backend running");
 })
+
+app.use("/api/user",userRouter);
 
 const PORT = process.env.PORT;
 
