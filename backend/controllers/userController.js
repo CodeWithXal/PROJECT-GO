@@ -29,4 +29,29 @@ async function completeProfile(req, res){
 }
 
 
-module.exports = {completeProfile}
+// Show Profile function
+
+async function showProfile(req, res){
+    try{
+        const user = await userModel.findById(req.userId).select("-password");
+
+        if(!user){
+            res.status(401).json({
+                message : "User not found"
+            });
+        }
+
+        res.json({user});
+    }
+    catch(err){
+        res.status(500).json({
+            message : "Failed to fetch Profile",
+            error : err.message
+        });
+    }
+}
+
+// add the /me route for fetching your profile
+
+
+module.exports = {completeProfile, showProfile};
