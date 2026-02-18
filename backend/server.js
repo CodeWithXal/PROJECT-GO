@@ -2,18 +2,22 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db.js");
-const {authRouter} = require("./routes/auth");
-const {userRouter} = require("./routes/user.js")
+const {authRouter} = require("./routes/auth.js");
+const {userRouter} = require("./routes/user.js");
+const {projectRouter} = require("./routes/project.js");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/api/auth",authRouter)
 app.get("/", (req , res) =>{
     res.send("backend running");
 })
 
+// router points
+
+app.use("/api/auth",authRouter);
 app.use("/api/user",userRouter);
+app.use("/api/project",projectRouter);
 
 const PORT = process.env.PORT;
 
