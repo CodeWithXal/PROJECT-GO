@@ -133,5 +133,309 @@ async function showMembers(req, res){
     }
 }
 
+// request function
 
-module.exports = {createProject, myProjects, joinProject, showMembers};
+async function requestToJoin(req, res){
+    try{
+        const project = await projectModel.findById(req.params.projectId);
+        
+
+        if(!project){
+            return res.status(404).json({
+                message : "Project Not Found"
+            });
+        }
+
+    
+        if(project.createdBy.toString() === req.userId){
+            return res.status(400).json({
+                message : "Creator cannot join own project"
+            });
+        }
+        if(project.members.some(
+            members => members.toString() === req.userId
+        )){
+            return res.status(400).json({
+                message : "Already a member"
+            });
+        }
+
+        const alreadyRequested = project.joinRequest.some(
+            id => id.toString() === req.userId
+        );
+
+        if(alreadyRequested){
+            return res.status(400).json({
+                message : "Already Requested"
+            });
+        }
+
+        project.joinRequest.push(req.userId);
+        await project.save();
+
+        res.json({
+            message : "Join request sent",
+            userId : req.userId
+        })
+
+    }
+    catch(err){
+        res.json({
+            message : "Error sending request",
+            error : err.message
+        });
+    }
+
+}
+
+// function to accept requests
+
+async function acceptRequest(req, res){
+    try{
+        const project = await projectModel.findById(req.params.projectId);
+        
+        if(!project){
+            return res.status(404).json({
+                message : "Project not found"
+            });
+        }
+
+        if(project.createdBy.toString() !== req.userId){
+            return res.status(403).json({
+                message : "Only creator can accept requests"
+            });
+        }
+
+        const requestedUser = req.params.userId;
+
+        const requestExists = project.joinRequest.some(
+            id => id.toString() === requestedUser
+        );
+
+
+        if(!requestExists){
+            return res.status(400).json({
+                message : "No request found"
+            });
+        }
+
+        project.joinRequest = project.joinRequest.filter(
+            id => id.toString() !== requestedUser
+        );
+
+        if(!req.userId){
+            return res.status(400).json({
+                message : "invalid user"
+            });
+        }
+
+        project.members.push(requestedUser);
+        await project.save();
+
+        res.json({
+            message : "User added to project"
+        });
+    }
+    catch(err){
+        res.json({
+            message : "Error accepting request",
+            error : err.message
+        });
+    }
+    
+
+}
+
+
+// function to reject requests
+
+async function rejectRequest(req, res){
+    try{
+    const project = await projectModel.findById(req.params.projectId);
+
+    if(!project){
+        return res.status(404).json({
+            message : "No project found"
+        });
+    }
+
+    const requestedUser = req.params.userId;
+
+    if(!project.joinRequest.includes(requestedUser)){
+        return res.status(400).json({
+            message : "No request found"
+        });
+    }
+
+    project.joinRequest = project.joinRequest.filter(
+        id => id.toString() !== requestedUser 
+    );
+
+    await project.save();
+
+    res.json({
+        message : "Request rejected"
+    });
+    }
+    catch(err){
+        res.json({
+            messsage : "Error rejecting request",
+            error : err.message
+        });
+    }
+}
+
+
+// function to kick meembers
+
+async function kickMember(req, res){
+    try{
+        const project = await projectModel.findById(req.params.projectId);
+
+        if(!project){
+            return res.status(404).json({
+                message : "Project not found"
+            });
+        }
+
+        if(project.createdBy.toString() !== req.userId){
+            return res.status(403).json({
+                message : "Only Creator can kick"
+            })
+        }
+
+        const member = req.params.userId;
+
+        if(member === project.createdBy.toString()){
+            return res.status(400).json({
+                message : "Cannot kick Creator"
+            })
+        }
+
+        const isMember = project.members.some(
+        id => id.toString() === member
+        );
+
+        if(!isMember){
+            return res.status(400).json({
+                message : "Not a member "
+            });
+        }
+
+        project.members = project.members.filter(
+            id => id.toString() !== member 
+        );
+
+        await project.save();
+
+        res.json({
+            message : "User kicked successfully"
+        })
+    }
+    catch(err){
+        res.status(500).json({
+            message : "Error kicking member",
+            error : err.message
+        });
+    }
+}
+
+
+// function to leave project
+
+async function leaveProject(req, res){
+    try{
+    const project = await projectModel.findById(req.params.projectId);
+    if(!project){
+        return res.status(404).json({
+            message : "Project not found"
+        });
+    }
+
+    const member = req.userId;
+
+    const isMember = project.members.some(
+        id => id.toString() === member
+    );
+
+    if(project.createdBy.toString() === member){
+        return res.status(400).json({
+            message : "creator cannot leave project"
+        })
+    }
+
+    if(!isMember){
+        return res.status(403).json({
+            message : "you are not a member"
+        });
+    }
+
+    project.members = project.members.filter(
+        id => id.toString() !== member
+    );
+
+    await project.save();
+
+    res.json({
+        message : "Left project successfully"
+    })
+    }
+    catch(err){
+        res.json({
+            message : "Error leavig project",
+            error : err.message 
+        });
+    }
+}
+
+
+// function to delete project 
+
+async function deleteProject(req, res){
+    try{
+    const project = await projectModel.findById(req.params.projectId);
+
+    if(!project){
+        return res.status(404).json({
+            message : "Project not found"
+        });
+    }
+
+    if(project.createdBy.toString() !== req.userId){
+        return res.status(403).json({
+            message : "Only Creator can delete project"
+        });
+    }
+
+    // Remove project from all members
+    await userModel.updateMany(
+        { _id: { $in: project.members } },
+        { $pull: { joinedProjects: project._id } }
+    );
+
+    // Remove project from creator if stored
+    await userModel.updateOne(
+        { _id: project.createdBy },
+        { $pull: { joinedProjects: project._id } }
+    );
+
+    await project.deleteOne();
+
+    res.json({
+        message : "Project deleted successfully"
+    });
+    }
+    catch(err){
+        res.json({
+            message : "Error deleting project",
+            error : err.message
+        });
+    }
+}
+
+
+async function joinedProjects(req, res){
+
+}
+
+module.exports = {createProject, myProjects, showMembers, requestToJoin, acceptRequest, rejectRequest, kickMember, leaveProject, deleteProject};
