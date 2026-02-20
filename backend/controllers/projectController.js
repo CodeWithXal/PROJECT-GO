@@ -1,4 +1,4 @@
-const { includes } = require("zod");
+const { z } = require("zod");
 const { projectModel } = require("../models/projects");
 
 //create project function
@@ -57,9 +57,9 @@ async function myProjects(req, res) {
     });
 
     res.json({
-      created_count: createProject.length,
+      created_count: createdProjects.length,
       created: createdProjects,
-      joined_count: joinProject.length,
+      joined_count: joinedProjects.length,
       joined: joinedProjects,
     });
   } catch (err) {
@@ -70,40 +70,13 @@ async function myProjects(req, res) {
   }
 }
 
-// join project function
-
-async function joinProject(req, res) {
-  const projectId = req.params.projectId;
-  const userId = req.userId;
-
-  const project = await projectModel.findById(projectId);
-
-  if (!project) {
-    return res.status(404).json({
-      message: "project not found",
-    });
-  }
-
-  //prevent duplicates
-
-  if (project.members.includes(userId)) {
-    return res.json({
-      message: "already joined",
-    });
-  }
-
-  project.members.push(userId);
-  await project.save();
-
-  res.json({
-    message: "project joined successfully",
-  });
-}
-
 // show members function
 
 async function showMembers(req, res) {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.projectId)) {
+      return res.status(400).json({ message: "Invalid project id" });
+    }
     const project = await projectModel.findById(req.params.projectId);
 
     if (!project) {
@@ -115,9 +88,9 @@ async function showMembers(req, res) {
     // authentication members should only be visible to
     // creator or members of project
     const isCreator = project.createdBy.toString() === req.userId;
-    const isMember = project.members.some(
-      (members) => members.toString() === req.userId,
-    );
+    const isMember =
+      Array.isArray(project.members) &&
+      project.members.some((member) => member.toString() === req.userId);
 
     if (!isCreator && !isMember) {
       return res.status(403).json({
@@ -125,13 +98,14 @@ async function showMembers(req, res) {
       });
     }
 
-    // this shows the members
-    await project.populate("members", "username email");
-    await project.populate("createdBy", "username");
-
-    res.json({ project });
-  } catch (err) {
     res.json({
+      projectId: project._id,
+      title: project.title,
+      creator: project.createdBy,
+      members: project.members,
+    });
+  } catch (err) {
+    res.status(500).json({
       message: "Error fetching Project",
       error: err.message,
     });
@@ -142,6 +116,9 @@ async function showMembers(req, res) {
 
 async function requestToJoin(req, res) {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.projectId)) {
+      return res.status(400).json({ message: "Invalid project id" });
+    }
     const project = await projectModel.findById(req.params.projectId);
 
     if (!project) {
@@ -190,6 +167,9 @@ async function requestToJoin(req, res) {
 
 async function acceptRequest(req, res) {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.projectId)) {
+      return res.status(400).json({ message: "Invalid project id" });
+    }
     const project = await projectModel.findById(req.params.projectId);
 
     if (!project) {
@@ -226,7 +206,9 @@ async function acceptRequest(req, res) {
       });
     }
 
-    project.members.push(requestedUser);
+    if (!project.members.some((id) => id.toString() === requestedUser)) {
+      project.members.push(requestedUser);
+    }
     await project.save();
 
     res.json({
@@ -244,6 +226,9 @@ async function acceptRequest(req, res) {
 
 async function rejectRequest(req, res) {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.projectId)) {
+      return res.status(400).json({ message: "Invalid project id" });
+    }
     const project = await projectModel.findById(req.params.projectId);
 
     if (!project) {
@@ -254,7 +239,11 @@ async function rejectRequest(req, res) {
 
     const requestedUser = req.params.userId;
 
-    if (!project.joinRequest.includes(requestedUser)) {
+    const requestExists = project.joinRequest.some(
+      (id) => id.toString() === requestedUser,
+    );
+
+    if (!requestExists) {
       return res.status(400).json({
         message: "No request found",
       });
@@ -281,6 +270,9 @@ async function rejectRequest(req, res) {
 
 async function kickMember(req, res) {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.projectId)) {
+      return res.status(400).json({ message: "Invalid project id" });
+    }
     const project = await projectModel.findById(req.params.projectId);
 
     if (!project) {
@@ -330,6 +322,9 @@ async function kickMember(req, res) {
 
 async function leaveProject(req, res) {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.projectId)) {
+      return res.status(400).json({ message: "Invalid project id" });
+    }
     const project = await projectModel.findById(req.params.projectId);
     if (!project) {
       return res.status(404).json({
@@ -372,6 +367,9 @@ async function leaveProject(req, res) {
 
 async function deleteProject(req, res) {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.projectId)) {
+      return res.status(400).json({ message: "Invalid project id" });
+    }
     const project = await projectModel.findById(req.params.projectId);
 
     if (!project) {
@@ -386,18 +384,6 @@ async function deleteProject(req, res) {
       });
     }
 
-    // Remove project from all members
-    await userModel.updateMany(
-      { _id: { $in: project.members } },
-      { $pull: { joinedProjects: project._id } },
-    );
-
-    // Remove project from creator if stored
-    await userModel.updateOne(
-      { _id: project.createdBy },
-      { $pull: { joinedProjects: project._id } },
-    );
-
     await project.deleteOne();
 
     res.json({
@@ -406,6 +392,187 @@ async function deleteProject(req, res) {
   } catch (err) {
     res.json({
       message: "Error deleting project",
+      error: err.message,
+    });
+  }
+}
+
+async function exploreProjects(req, ref) {
+  try {
+    const projects = await projectModel
+      .find()
+      .populate("createdBy", "username")
+      .select("-joinRequest");
+
+    res.json({
+      count: await projects.length,
+      projects,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error fetching pprojects",
+      error: err.message,
+    });
+  }
+}
+
+async function viewJoinRequests(req, res) {
+  try {
+    const { projectId } = req.params;
+
+    // Validate ID
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+      return res.status(400).json({
+        message: "Invalid project id",
+      });
+    }
+
+    const project = await projectModel
+      .findById(projectId)
+      .populate("joinRequest", "username email");
+
+    if (!project) {
+      return res.status(404).json({
+        message: "Project not found",
+      });
+    }
+
+    // Only creator can view requests
+    if (project.createdBy.toString() !== req.userId) {
+      return res.status(403).json({
+        message: "Only creator can view join requests",
+      });
+    }
+
+    res.json({
+      projectId: project._id,
+      projectTitle: project.title,
+      pendingRequestsCount: project.joinRequest.length,
+      pendingRequests: project.joinRequest,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error fetching join requests",
+      error: err.message,
+    });
+  }
+}
+
+async function searchProjects(req, res) {
+  try {
+    const { query, page = 1, limit = 5 } = req.query;
+
+    if (!query) {
+      return res.status(400).json({
+        message: "Search query is required",
+      });
+    }
+
+    const skip = (page - 1) * limit;
+
+    const projects = await projectModel
+      .find({
+        $or: [
+          { title: { $regex: query, $options: "i" } },
+          { description: { $regex: query, $options: "i" } },
+        ],
+      })
+      .skip(skip)
+      .limit(Number(limit));
+
+    res.json({
+      page: Number(page),
+      count: projects.length,
+      projects,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error searching projects",
+      error: err.message,
+    });
+  }
+}
+
+async function getSingleProject(req, res) {
+  try {
+    const { projectId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+      return res.status(400).json({
+        message: "Invalid project id",
+      });
+    }
+
+    const project = await projectModel
+      .findById(projectId)
+      .populate("createdBy", "username email")
+      .populate("members", "username email");
+
+    if (!project) {
+      return res.status(404).json({
+        message: "Project not found",
+      });
+    }
+
+    res.json({
+      id: project._id,
+      title: project.title,
+      description: project.description,
+      creator: project.createdBy,
+      members: project.members,
+      memberCount: project.members.length,
+      createdAt: project.createdAt,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error fetching project",
+      error: err.message,
+    });
+  }
+}
+
+async function cancelJoinRequest(req, res) {
+  try {
+    const { projectId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+      return res.status(400).json({
+        message: "Invalid project id",
+      });
+    }
+
+    const project = await projectModel.findById(projectId);
+
+    if (!project) {
+      return res.status(404).json({
+        message: "Project not found",
+      });
+    }
+
+    // Check if request exists
+    const requestExists = project.joinRequest.some(
+      (id) => id.toString() === req.userId,
+    );
+
+    if (!requestExists) {
+      return res.status(400).json({
+        message: "No pending join request found",
+      });
+    }
+
+    // Remove request
+    project.joinRequest = project.joinRequest.filter(
+      (id) => id.toString() !== req.userId,
+    );
+
+    await project.save();
+
+    res.json({
+      message: "Join request cancelled successfully",
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error cancelling request",
       error: err.message,
     });
   }
@@ -421,4 +588,9 @@ module.exports = {
   kickMember,
   leaveProject,
   deleteProject,
+  exploreProjects,
+  viewJoinRequests,
+  searchProjects,
+  getSingleProject,
+  cancelJoinRequest,
 };
