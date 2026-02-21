@@ -10,10 +10,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       lowercase: true,
-    },
-    password: {
-      type: String,
-      required: true,
+      sparse: true,
     },
     skills: {
       type: [String],
@@ -35,10 +32,14 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    clerkId: {
+      type: String,
+      unique: true,
+    },
   },
   { timestamps: true },
 );
 
-userModel = mongoose.model("User", userSchema);
+userModel = mongoose.model("Users", userSchema);
 
 module.exports = { userModel };

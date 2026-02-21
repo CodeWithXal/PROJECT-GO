@@ -1,23 +1,36 @@
 const jwt = require("jsonwebtoken");
-//const jwt_secret = process.env.JWT_AUTH_SECRET;
 
 function authMiddleware(secret_key) {
-  return function (req, res, next) {
-    const token = req.headers.authorization;
+  return async function (req, res, next) {
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
+    // Check header exists
+    if (!authHeader) {
       return res.status(401).json({
-        message: "Token Missing",
+        message: "Authorization header missing",
       });
     }
 
+    // Check Bearer format
+    if (!authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        message: "Invalid token format",
+      });
+    }
+
+    // Extract token
+    const token = authHeader.split(" ")[1];
+
     try {
-      const decoded = jwt.verify(token, secret_key);
+      const decoded = jwt.verify(token, secret_key, {
+        issuer: "project-go",
+        audience: "project-go-users",
+      });
       req.userId = decoded.id;
       next();
     } catch (error) {
       return res.status(401).json({
-        message: "Invalid Token",
+        message: "Invalid or expired token",
       });
     }
   };

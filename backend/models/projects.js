@@ -40,5 +40,5 @@ const projectSchema = new mongoose.Schema(
 
 projectSchema.index({ title: 1, createdBy: 1 }, { unique: true });
 
-const projectModel = mongoose.model("projects", projectSchema);
+const projectModel = mongoose.model("Projects", projectSchema);
 module.exports = { projectModel };

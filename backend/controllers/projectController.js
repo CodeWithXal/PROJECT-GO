@@ -1,5 +1,6 @@
 const { z } = require("zod");
 const { projectModel } = require("../models/projects");
+const mongoose = require("mongoose");
 
 //create project function
 
@@ -9,6 +10,12 @@ async function createProject(req, res) {
   const skillsRequired = req.body.skillsRequired;
 
   try {
+    if (!title || !skillsRequired?.length) {
+      return res.status(400).json({
+        message: "Title and skills required are mandatory",
+      });
+    }
+
     title = title.trim().toLowerCase();
 
     // check existing projects
@@ -237,6 +244,12 @@ async function rejectRequest(req, res) {
       });
     }
 
+    if (project.createdBy.toString() !== req.userId) {
+      return res.status(403).json({
+        message: "Only creator can reject requests",
+      });
+    }
+
     const requestedUser = req.params.userId;
 
     const requestExists = project.joinRequest.some(
@@ -397,7 +410,9 @@ async function deleteProject(req, res) {
   }
 }
 
-async function exploreProjects(req, ref) {
+// function to let user to explore projects
+
+async function exploreProjects(req, res) {
   try {
     const projects = await projectModel
       .find()
@@ -405,7 +420,7 @@ async function exploreProjects(req, ref) {
       .select("-joinRequest");
 
     res.json({
-      count: await projects.length,
+      count: projects.length,
       projects,
     });
   } catch (err) {
@@ -415,6 +430,8 @@ async function exploreProjects(req, ref) {
     });
   }
 }
+
+// function to let creator view join requests
 
 async function viewJoinRequests(req, res) {
   try {
@@ -458,9 +475,13 @@ async function viewJoinRequests(req, res) {
   }
 }
 
+// function to search projects
+
 async function searchProjects(req, res) {
   try {
     const { query, page = 1, limit = 5 } = req.query;
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
 
     if (!query) {
       return res.status(400).json({
@@ -468,7 +489,7 @@ async function searchProjects(req, res) {
       });
     }
 
-    const skip = (page - 1) * limit;
+    const skip = (pageNumber - 1) * limit;
 
     const projects = await projectModel
       .find({
@@ -478,11 +499,20 @@ async function searchProjects(req, res) {
         ],
       })
       .skip(skip)
-      .limit(Number(limit));
+      .limit(limitNumber);
+
+    const totalProjects = await projectModel.countDocuments({
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } },
+      ],
+    });
 
     res.json({
-      page: Number(page),
+      page: pageNumber,
+      limit: limitNumber,
       count: projects.length,
+      total: totalProjects,
       projects,
     });
   } catch (err) {
@@ -492,6 +522,8 @@ async function searchProjects(req, res) {
     });
   }
 }
+
+// function to get details of a project
 
 async function getSingleProject(req, res) {
   try {
@@ -530,6 +562,8 @@ async function getSingleProject(req, res) {
     });
   }
 }
+
+// function to let user to ccancel their joinn requests
 
 async function cancelJoinRequest(req, res) {
   try {
