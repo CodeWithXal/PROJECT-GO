@@ -48,6 +48,7 @@ async function clerkLogin(req, res) {
       profileCompleted: user.profileCompleted,
     });
   } catch (err) {
+    console.error("CLERK LOGIN ERROR:", err); // ADD THIS
     res.status(500).json({
       message: "Error logging in",
       error: err.message,

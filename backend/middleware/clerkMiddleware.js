@@ -1,30 +1,24 @@
-const { Clerk } = require("@clerk/clerk-sdk-node");
-
-const clerk = new Clerk({ secretKey: process.env.CLERK_SECRET_KEY });
+require("dotenv").config();
+const { verifyToken } = require("@clerk/backend");
 
 const verifyClerkToken = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
-    // check token exists and bearer format
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
         message: "Clerk token missing",
       });
     }
 
-    // extract token
     const token = authHeader.split(" ")[1];
 
-    const session = await clerk.sessions.verifySessionToken(token);
+    const payload = await verifyToken(token, {
+      secretKey: process.env.CLERK_SECRET_KEY,
+    });
 
-    if (!session?.userId) {
-      return res.status(401).json({
-        message: "Invalid session",
-      });
-    }
-    
-    req.clerkUserId = session.userId;
+    req.clerkUserId = payload.sub;
+
     next();
   } catch (err) {
     return res.status(401).json({
@@ -34,4 +28,4 @@ const verifyClerkToken = async (req, res, next) => {
   }
 };
 
-module.exports = {verifyClerkToken};
+module.exports = { verifyClerkToken };

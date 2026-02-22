@@ -3,33 +3,40 @@ const { userModel } = require("../models/users");
 // Complete Profile Function
 
 async function completeProfile(req, res) {
-  const { bio, skills, education, experience } = req.body;
+   try {
+    const { username, bio, skills } = req.body;
 
-  try {
-    const updatedUser = await userModel.findByIdAndUpdate(
-      req.userId,
-      {
-        bio,
-        skills,
-        education,
-        experience,
-        profileCompleted: true,
-      },
-      { returnDocument: "after" },
-    );
+    if (!username) {
+      return res.status(400).json({
+        message: "Username is required",
+      });
+    }
+
+    const user = await userModel.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    user.username = username;
+    user.bio = bio;
+    user.skills = skills || [];
+    user.profileCompleted = true;
+
+    await user.save();
 
     res.json({
-      message: "Profile completed",
-      profileCompleted: updatedUser.profileCompleted,
+      message: "Profile completed successfully",
     });
   } catch (err) {
-    res.json({
-      message: "Error Updating Profile",
-      error: err.message,
+    console.error("COMPLETE PROFILE ERROR:", err);
+    res.status(500).json({
+      message: "Internal server error",
     });
   }
 }
-
 // Show Profile function
 
 async function showProfile(req, res) {
@@ -37,7 +44,7 @@ async function showProfile(req, res) {
     const user = await userModel.findById(req.userId).select("-password");
 
     if (!user) {
-      res.status(401).json({
+      return res.status(401).json({
         message: "User not found",
       });
     }
@@ -51,6 +58,18 @@ async function showProfile(req, res) {
   }
 }
 
-// add the /me route for fetching your profile
+// function for fetching your profile
+async function myProfile(req, res) {
+  try {
+    const user = await userModel.findById(req.userId);
 
-module.exports = { completeProfile, showProfile };
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({
+      message: "Error fetching user",
+    });
+  }
+}
+
+
+module.exports = { completeProfile, showProfile, myProfile };
