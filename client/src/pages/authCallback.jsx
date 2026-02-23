@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
+import { API } from "../config/api";
 import axios from "axios";
 
 function AuthCallback() {
@@ -34,7 +35,7 @@ function AuthCallback() {
 
         // Exchange Clerk token for JWT via your backend
         const response = await axios.post(
-          "http://localhost:3000/api/auth/clerk-login",
+          `${API}/api/auth/clerk-login`,
           {},
           {
             headers: {
