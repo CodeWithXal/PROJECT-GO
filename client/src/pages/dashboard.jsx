@@ -4,6 +4,7 @@ import axios from "axios";
 import { UserButton } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom"; // ADD THIS IMPORT
 import "./Dashboard.css"; // Optional: Create a CSS file for dashboard
+import SignOutButton from "./signOutButton";
 
 function Dashboard() {
   const navigate = useNavigate(); // ADD THIS
@@ -49,6 +50,17 @@ function Dashboard() {
           >
             ➕ Create Project
           </button>
+          <SignOutButton 
+            style={{
+              padding: '0.5rem 1rem',
+              backgroundColor: '#dc3545',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              marginRight: '1rem'
+            }}
+          />
           <UserButton />
         </div>
       </div>
