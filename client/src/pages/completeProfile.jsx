@@ -1,78 +1,136 @@
-import { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+// src/pages/CompleteProfile.jsx
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { userAPI } from '../services/api';
+import './CompleteProfile.css';
 
-function CompleteProfile() {
+const CompleteProfile = () => {
+  const [formData, setFormData] = useState({
+    username: '',
+    bio: '',
+    skills: ''
+  });
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [bio, setBio] = useState("");
-  const [skills, setSkills] = useState("");
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+    if (errors[e.target.name]) {
+      setErrors({
+        ...errors,
+        [e.target.name]: ''
+      });
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required';
+    }
+
+    return newErrors;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const formErrors = validateForm();
+    
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
+    }
+
+    setIsLoading(true);
+    setErrors({});
 
     try {
-      const token = localStorage.getItem("token");
+      const skillsArray = formData.skills.split(',').map(skill => skill.trim()).filter(skill => skill);
+      
+      const result = await userAPI.completeProfile({
+        username: formData.username,
+        bio: formData.bio,
+        skills: skillsArray
+      });
 
-      await axios.put(
-        "http://localhost:3000/api/user/complete-profile",
-        {
-          username,
-          bio,
-          skills: skills.split(",").map((s) => s.trim()),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      navigate("/dashboard");
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong");
-      console.log(err);
+      if (result.message === 'Profile completed successfully') {
+        navigate('/dashboard');
+      } else {
+        setErrors({ general: result.message });
+      }
+    } catch (error) {
+        console.error(error);
+      setErrors({ general: 'Failed to complete profile. Please try again.' });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: "40px" }}>
-      <h2>Complete Your Profile</h2>
+    <div className="complete-profile-container">
+      <div className="complete-profile-card">
+        <h2>Complete Your Profile</h2>
+        
+        {errors.general && (
+          <div className="error-message general-error">{errors.general}</div>
+        )}
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="complete-profile-form">
+          <div className="form-group">
+            <label htmlFor="username">Username *</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              className={errors.username ? 'error' : ''}
+              placeholder="Enter your username"
+            />
+            {errors.username && <span className="error-text">{errors.username}</span>}
+          </div>
 
-        <div>
-          <textarea
-            placeholder="Bio"
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-          />
-        </div>
+          <div className="form-group">
+            <label htmlFor="bio">Bio</label>
+            <textarea
+              id="bio"
+              name="bio"
+              value={formData.bio}
+              onChange={handleChange}
+              rows="4"
+              placeholder="Tell us about yourself..."
+            />
+          </div>
 
-        <div>
-          <input
-            type="text"
-            placeholder="Skills (comma separated)"
-            value={skills}
-            onChange={(e) => setSkills(e.target.value)}
-          />
-        </div>
+          <div className="form-group">
+            <label htmlFor="skills">Skills</label>
+            <input
+              type="text"
+              id="skills"
+              name="skills"
+              value={formData.skills}
+              onChange={handleChange}
+              placeholder="Enter skills separated by commas (e.g., React, Node.js, Design)"
+            />
+            <small className="help-text">Separate multiple skills with commas</small>
+          </div>
 
-        <button type="submit">Save Profile</button>
-      </form>
+          <button 
+            type="submit" 
+            className="submit-btn"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Saving...' : 'Complete Profile'}
+          </button>
+        </form>
+      </div>
     </div>
   );
-}
+};
 
 export default CompleteProfile;

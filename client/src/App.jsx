@@ -1,33 +1,45 @@
-import { useAuth } from "@clerk/clerk-react";
-import { Navigate, Route, Routes } from "react-router-dom";
-import Login from "./pages/signin";
-import Signup from "./pages/signup";
-import AuthCallback from "./pages/authCallback";
-import CompleteProfile from "./pages/CompleteProfile";
-import Dashboard from "./pages/dashboard";
+// src/App.jsx
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Signup from './pages/signup';
+import Signin from './pages/signin';
+import CompleteProfile from './pages/completeProfile';
+import Dashboard from './pages/dashboard';
+import AuthGuard from './components/AuthGuard';
+import ProtectedRoute from './components/ProtectedRoute';
+import './App.css';
 
 function App() {
-
   return (
-    <Routes>
-      <Route path="/sign-in" element={<Login />} />
-      <Route path="/sign-up" element={<Signup />} />
-      <Route path="/auth-callback" element={<AuthCallback />} />
-      <Route 
-        path="/complete-profile" 
-        element={
-            <CompleteProfile />
-        } 
-      />
-      <Route 
-        path="/dashboard/*" 
-        element={
-            <Dashboard />
-        } 
-      />
-      <Route path="/" element={<Navigate to="/sign-in" replace />} />
-      <Route path="*" element={<Navigate to="/sign-in" replace />} />
-    </Routes>
+    <Router>
+      <div className="App">
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/signin" element={<Signin />} />
+          
+          {/* Protected Routes */}
+          <Route path="/complete-profile" element={
+            <ProtectedRoute>
+              <CompleteProfile />
+            </ProtectedRoute>
+          } />
+          
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <AuthGuard>
+                <Dashboard />
+              </AuthGuard>
+            </ProtectedRoute>
+          } />
+          
+          {/* Default Route */}
+          <Route path="/" element={<Navigate to="/signin" replace />} />
+          
+          {/* 404 Route */}
+          <Route path="*" element={<Navigate to="/signin" replace />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
