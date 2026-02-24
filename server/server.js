@@ -5,6 +5,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 const connectDB = require("./config/db.js");
+console.log("Mongo URI:", process.env.MONGO_URI);
 const { authRouter } = require("./routes/auth.js");
 const { userRouter } = require("./routes/user.js");
 const { projectRouter } = require("./routes/project.js");

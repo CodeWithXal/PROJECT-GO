@@ -1,9 +1,9 @@
 require("dotenv").config();
-const { clerkLogin } = require("../controllers/authController");
-const { verifyClerkToken } = require("../middleware/clerkMiddleware");
+const { signup, signin } = require("../controllers/authController")
 const { Router } = require("express");
 
 const authRouter = Router();
-authRouter.post("/clerk-login", verifyClerkToken, clerkLogin);
+authRouter.post("/signup", signup);
+authRouter.post("/signin", signin);
 
 module.exports = { authRouter };

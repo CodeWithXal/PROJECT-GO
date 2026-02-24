@@ -11,6 +11,11 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       sparse: true,
     },
+    password: {
+      type: String,
+      unique: true,
+      required: true
+    },
     skills: {
       type: [String],
       default: [],
@@ -30,10 +35,6 @@ const userSchema = new mongoose.Schema(
     profileCompleted: {
       type: Boolean,
       default: false,
-    },
-    clerkId: {
-      type: String,
-      unique: true,
     },
   },
   { timestamps: true },
