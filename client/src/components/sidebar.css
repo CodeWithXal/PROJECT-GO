@@ -1,50 +1,222 @@
+/* ============================= */
+/*      PREMIUM DARK SIDEBAR    */
+/* ============================= */
+
 .sidebar {
   position: fixed;
   top: 70px;
   left: 0;
   height: calc(100vh - 70px);
-  background: #1e293b;
-  color: white;
-  transition: width 0.3s ease;
-  overflow: hidden;
+
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+
+  background: rgba(15, 15, 18, 0.65);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: #F5F5F7;
+
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  overflow: hidden;
+
+  /* Smooth Apple-like width physics */
+  transition: width 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Width States */
 .sidebar.closed {
   width: 70px;
 }
 
 .sidebar.open {
-  width: 230px;
+  width: 240px;
 }
+
+/* ============================= */
+/* Toggle Button */
+/* ============================= */
+
+.sidebar-top {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.toggle-btn {
+  background: transparent;
+  border: none;
+  padding: 10px;
+  border-radius: 12px;
+  color: #F5F5F7;
+  cursor: pointer;
+
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.18);
+  transform: scale(1.05);
+}
+
+/* ============================= */
+/* Profile Section */
+/* ============================= */
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  gap: 15px;
+  cursor: pointer;
+  border-radius: 14px;
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Hover Lift + Glow */
+.profile-section:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 0 25px rgba(255, 255, 255, 0.15);
+}
+
+/* Active Profile Glow */
+.profile-section.active {
+  background: rgba(255, 255, 255, 0.10);
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 0 30px rgba(255, 255, 255, 0.22);
+}
+
+/* Avatar */
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  background: linear-gradient(145deg, #1c1c1f, #2a2a2e);
+  border: 1px solid rgba(255,255,255,0.08);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: bold;
+  color: #ffffff;
+
+  transition: all 0.3s ease;
+}
+
+.profile-section:hover .profile-avatar {
+  box-shadow: 0 0 18px rgba(255,255,255,0.18);
+}
+
+/* Profile Info Text Fade */
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: all 0.35s ease;
+}
+
+.sidebar.open .profile-info {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.profile-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.profile-email {
+  font-size: 12px;
+  color: #A1A1AA;
+}
+
+/* ============================= */
+/* Menu Section */
+/* ============================= */
 
 .sidebar-menu {
-  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px;
 }
 
+/* Menu Item */
 .menu-item {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 12px 20px;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 14px;
   cursor: pointer;
-  transition: 0.2s;
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Soft Hover Lift + Glow */
 .menu-item:hover {
-  background: #334155;
+  background: rgba(255, 255, 255, 0.09);
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 22px rgba(255, 255, 255, 0.16);
 }
 
+/* Active Item Glow */
 .menu-item.active {
-  background: #475569;
+  background: rgba(255, 255, 255, 0.12);
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 0 30px rgba(255, 255, 255, 0.22);
 }
+
+/* Text Fade In Animation */
+.menu-item span {
+  transition:
+    opacity 0.3s ease,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sidebar.open .menu-item span {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ============================= */
+/* Footer */
+/* ============================= */
 
 .sidebar-footer {
-  padding-bottom: 20px;
+  padding: 15px;
+}
+
+/* Logout Style */
+.logout {
+  gap: 20px;
+  color: #ff0000;
 }
 
 .logout:hover {
-  background: #7f1d1d;
+  background: rgba(255, 255, 255, 0.09);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 22px rgba(255, 255, 255, 0.16);
 }
