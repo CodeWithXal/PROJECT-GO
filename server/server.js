@@ -43,7 +43,7 @@ app.use(limiter);
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5, // only 5 login attempts
+  max: 50, // only 5 login attempts
   message: { message: "Too many login attempts" },
 });
 

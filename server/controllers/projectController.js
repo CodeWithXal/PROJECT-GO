@@ -55,20 +55,11 @@ async function createProject(req, res) {
 
 async function myProjects(req, res) {
   try {
-    const createdProjects = await projectModel.find({
+    const projects = await projectModel.find({
       createdBy: req.userId,
     });
 
-    const joinedProjects = await projectModel.find({
-      members: req.userId,
-    });
-
-    res.json({
-      created_count: createdProjects.length,
-      created: createdProjects,
-      joined_count: joinedProjects.length,
-      joined: joinedProjects,
-    });
+    res.status(200).json({ projects });
   } catch (err) {
     res.status(500).json({
       message: "Error fetching projects",
@@ -612,6 +603,49 @@ async function cancelJoinRequest(req, res) {
   }
 }
 
+const getMyJoinRequests = async (req, res) => {
+  try {
+    const userId = req.user._id; // from verifyToken middleware
+
+    // Find projects created by logged-in user
+    const projects = await projectModel
+      .find({ createdBy: userId })
+      .populate({
+        path: "joinRequest",
+        select: "username email skills",
+      })
+      .select("title joinRequest");
+
+    // Format response
+    const formatted = projects
+      .filter((project) => project.joinRequest.length > 0)
+      .map((project) => ({
+        projectId: project._id,
+        projectName: project.title,
+        requests: project.joinRequest,
+      }));
+
+    res.status(200).json(formatted);
+  } catch (error) {
+    console.error("Error fetching join requests:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// GET /api/project/joined-projects
+
+async function joinedProjects(req, res) {
+  try {
+    const projects = await projectModel
+      .find({ members: req.userId })
+      .populate("createdBy", "username email");
+
+    res.status(200).json({ projects });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 module.exports = {
   createProject,
   myProjects,
@@ -627,4 +661,6 @@ module.exports = {
   searchProjects,
   getSingleProject,
   cancelJoinRequest,
+  getMyJoinRequests,
+  joinedProjects
 };

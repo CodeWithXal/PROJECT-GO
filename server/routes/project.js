@@ -15,6 +15,8 @@ const {
   searchProjects,
   getSingleProject,
   cancelJoinRequest,
+  getMyJoinRequests,
+  joinedProjects
 } = require("../controllers/projectController");
 const jwt_secret = process.env.JWT_AUTH_SECRET;
 const { authMiddleware } = require("../middleware/auth_Middleware");
@@ -34,5 +36,7 @@ projectRouter.put("/:projectId/cancel-request", projectAuth, cancelJoinRequest);
 projectRouter.get("/search", projectAuth, searchProjects);
 projectRouter.get("/explore", projectAuth, exploreProjects);
 projectRouter.get("/:projectId", projectAuth, getSingleProject);
+projectRouter.get("/my-join-requests", projectAuth, getMyJoinRequests);
+projectRouter.get("/joined-projects", projectAuth, joinedProjects);
 
 module.exports = { projectRouter };

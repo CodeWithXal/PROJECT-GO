@@ -17,11 +17,16 @@ async function signup(req, res) {
 
   const requireBody = z.object({
     
-    email: z.string().email("invalid email format"),
+    email: z.string().email("invalid email format")
+    .refine((email) => {
+    const domains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com']; // Add more
+    const domain = email.split('@')[1];
+    return domains.includes(domain);
+  }, "Please use a valid email provider"),
     password: z
       .string()
       .min(8, "The password must be atleast 8 characters")
-      .max(25, "Thhe passwoed must be atmost 25 characters")
+      .max(25, "The passwoed must be atmost 25 characters")
       .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
       .regex(
         /[^A-Za-z0-9]/,
@@ -57,7 +62,7 @@ async function signup(req, res) {
   } catch (error) {
     return res.status(400).json({
       message: "User already exists or Database error",
-      error: error.messaage,
+      error: error.message,
     });
   }
 }
