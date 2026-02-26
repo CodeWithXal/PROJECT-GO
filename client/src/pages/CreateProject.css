@@ -1,0 +1,48 @@
+.create-project-container {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(25px);
+  border-radius: 18px;
+  padding: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 50px rgba(0, 132, 255, 0.08);
+}
+
+.create-project-container h2 {
+  margin-bottom: 25px;
+}
+
+.create-project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.create-project-form input,
+.create-project-form textarea {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 12px;
+  color: white;
+  outline: none;
+}
+
+.create-project-form textarea {
+  min-height: 120px;
+  resize: none;
+}
+
+.create-project-form button {
+  background: #a855f7;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+.create-project-form button:hover {
+  box-shadow: 0 0 15px #a855f7;
+}

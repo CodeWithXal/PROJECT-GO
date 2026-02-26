@@ -1,50 +1,75 @@
 // src/components/AuthGuard.jsx
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { userAPI, removeAuthToken } from '../services/api';
 
-const AuthGuard = ({ children }) => {
-  const [isChecking, setIsChecking] = useState(true);
-  const [isAuthorized, setIsAuthorized] = useState(false);
-  const navigate = useNavigate();
+import { useEffect, useState } from "react";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { userAPI, removeAuthToken, isAuthenticated } from "../services/api";
+
+const AuthGuard = () => {
+  const [status, setStatus] = useState("checking"); 
+  // "checking" | "authorized" | "unauthorized" | "complete-profile"
+
+  const location = useLocation();
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const verifyUser = async () => {
       try {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-          navigate('/signin');
+        if (!isAuthenticated()) {
+          setStatus("unauthorized");
           return;
         }
 
-        const response = await userAPI.checkAuth();
-        
-        if (response.profileCompleted) {
-          setIsAuthorized(true);
+        const response = await userAPI.getCurrentUser();
+        const user = response.user || response;
+
+        if (!user.profileCompleted) {
+          setStatus("complete-profile");
         } else {
-          navigate('/complete-profile');
+          setStatus("authorized");
         }
-      } catch (error) {
-        console.error('Auth check failed:', error);
+      } catch (err) {
+        console.error("AuthGuard error:", err);
         removeAuthToken();
-        navigate('/signin');
-      } finally {
-        setIsChecking(false);
+        setStatus("unauthorized");
       }
     };
 
-    checkAuth();
-  }, [navigate]);
+    verifyUser();
+  }, []);
 
-  if (isChecking) {
+  // 🔥 Professional Loading State
+  if (status === "checking") {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner">Loading...</div>
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#0f172a",
+          color: "#fff",
+          fontSize: "18px",
+          letterSpacing: "1px"
+        }}
+      >
+        Loading...
       </div>
     );
   }
 
-  return isAuthorized ? children : null;
+  // 🔥 Not logged in
+  if (status === "unauthorized") {
+    return <Navigate to="/signin" replace />;
+  }
+
+  // 🔥 Profile not completed
+  if (
+    status === "complete-profile" &&
+    !location.pathname.includes("/complete-profile")
+  ) {
+    return <Navigate to="/complete-profile" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default AuthGuard;

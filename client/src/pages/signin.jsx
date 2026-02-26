@@ -1,13 +1,13 @@
 // src/pages/Signin.jsx
-import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { authAPI, setAuthToken } from '../services/api';
-import './Signin.css';
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { authAPI, setAuthToken } from "../services/api";
+import "./Auth.css";
 
 const Signin = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: ""
   });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -15,10 +15,8 @@ const Signin = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Check for success message from signup
     if (location.state?.message) {
       alert(location.state.message);
-      // Clear the state
       window.history.replaceState({}, document.title);
     }
   }, [location]);
@@ -28,34 +26,26 @@ const Signin = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+
     if (errors[e.target.name]) {
       setErrors({
         ...errors,
-        [e.target.name]: ''
+        [e.target.name]: ""
       });
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    }
-
+    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.password) newErrors.password = "Password is required";
     return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formErrors = validateForm();
-    
+
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
       return;
@@ -72,73 +62,78 @@ const Signin = () => {
 
       if (result.token) {
         setAuthToken(result.token);
-        
+        localStorage.setItem("authToken", result.token);
+
         if (result.profileCompleted) {
-          navigate('/dashboard');
+          navigate("/dashboard");
         } else {
-          navigate('/complete-profile');
+          navigate("/complete-profile");
         }
       } else {
-        setErrors({ general: result.message || 'Signin failed' });
+        setErrors({ general: result.message || "Signin failed." });
       }
     } catch (error) {
-        console.error(error);
-      setErrors({ general: 'Signin failed. Please try again.' });
+      setErrors({ general: "Signin failed. Please try again." });
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="signin-container">
-      <div className="signin-card">
-        <h2>Welcome Back</h2>
-        
-        {errors.general && (
-          <div className="error-message general-error">{errors.general}</div>
-        )}
+    <div className="auth-container">
+      {/* LEFT BRAND SECTION */}
+      <div className="auth-left">
+        <h1 className="brand-title">PROJECT GO</h1>
+        <p className="brand-tagline">
+          Build. Collaborate. Launch.
+        </p>
+        <p className="brand-description">
+          PROJECT GO is a collaborative platform where developers,
+          designers, and innovators connect to build real-world
+          projects together. Create ideas, join teams, and turn
+          concepts into impactful products.
+        </p>
+      </div>
 
-        <form onSubmit={handleSubmit} className="signin-form">
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
+      {/* RIGHT FORM SECTION */}
+      <div className="auth-right">
+        <div className="auth-card">
+          <h2>Welcome Back</h2>
+
+          {errors.general && (
+            <div className="error-message">{errors.general}</div>
+          )}
+
+          <form onSubmit={handleSubmit} className="auth-form">
             <input
               type="email"
-              id="email"
               name="email"
+              placeholder="Email"
               value={formData.email}
               onChange={handleChange}
-              className={errors.email ? 'error' : ''}
-              placeholder="Enter your email"
+              className={errors.email ? "error" : ""}
             />
             {errors.email && <span className="error-text">{errors.email}</span>}
-          </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
             <input
               type="password"
-              id="password"
               name="password"
+              placeholder="Password"
               value={formData.password}
               onChange={handleChange}
-              className={errors.password ? 'error' : ''}
-              placeholder="Enter your password"
+              className={errors.password ? "error" : ""}
             />
             {errors.password && <span className="error-text">{errors.password}</span>}
-          </div>
 
-          <button 
-            type="submit" 
-            className="submit-btn"
-            disabled={isLoading}
-          >
-            {isLoading ? 'Signing In...' : 'Sign In'}
-          </button>
-        </form>
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? "Signing In..." : "Sign In"}
+            </button>
+          </form>
 
-        <p className="signup-link">
-          Don't have an account? <Link to="/signup">Sign up</Link>
-        </p>
+          <p className="switch-link">
+            Don’t have an account? <Link to="/signup">Sign up</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

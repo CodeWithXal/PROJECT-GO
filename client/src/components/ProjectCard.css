@@ -1,0 +1,13 @@
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skills-section,
+.creator-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.8;
+}

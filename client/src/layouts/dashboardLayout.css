@@ -1,0 +1,10 @@
+.layout-loading {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  opacity: 0.6;
+  background: #0f172a; /* match your dark theme */
+  color: white;
+}
