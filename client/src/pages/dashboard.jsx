@@ -8,7 +8,7 @@ import {
   Layers,
   Mail
 } from "lucide-react";
-import "./Dashboard.css";
+import "./dashboard.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
