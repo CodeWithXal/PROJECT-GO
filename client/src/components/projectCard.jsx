@@ -1,4 +1,4 @@
-import "./ProjectCard.css";
+import "./projectCard.css";
 import { Layers, User } from "lucide-react";
 
 const ProjectCard = ({ project, type }) => {

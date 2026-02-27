@@ -1,7 +1,7 @@
 // src/components/TopNavbar.jsx
 
 import { Search } from "lucide-react";
-import "./TopNavbar.css";
+import "./topNavbar.css";
 
 const TopNavbar = ({ isSidebarOpen }) => {
   return (

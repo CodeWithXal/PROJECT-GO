@@ -11,7 +11,7 @@ import {
   X
 } from "lucide-react";
 
-import "./Sidebar.css";
+import "./sidebar.css";
 
 const Sidebar = ({
   isOpen,
