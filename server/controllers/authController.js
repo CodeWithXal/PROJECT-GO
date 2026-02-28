@@ -60,11 +60,18 @@ async function signup(req, res) {
       message: "You are signed up successfully",
     });
   } catch (error) {
+  console.error("Signup error:", error);
+
+  if (error.code === 11000) {
     return res.status(400).json({
-      message: "User already exists or Database error",
-      error: error.message,
+      message: "Email already registered",
     });
   }
+
+  return res.status(500).json({
+    message: "Server error during signup",
+  });
+}
 }
 
 // signin function
