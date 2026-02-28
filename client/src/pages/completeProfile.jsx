@@ -50,20 +50,20 @@ const CompleteProfile = () => {
     setErrors({});
 
     try {
-  const skillsArray = formData.skills
-    .split(',')
-    .map(skill => skill.trim())
-    .filter(skill => skill);
+      const skillsArray = formData.skills.split(',').map(skill => skill.trim()).filter(skill => skill);
+      
+      const result = await userAPI.completeProfile({
+        username: formData.username,
+        bio: formData.bio,
+        skills: skillsArray
+      });
 
-  await userAPI.completeProfile({
-    username: formData.username,
-    bio: formData.bio,
-    skills: skillsArray
-  });
-
-  navigate('/dashboard');
-
-} catch (error) {
+      if (result.message === 'Profile completed successfully') {
+        navigate('/dashboard');
+      } else {
+        setErrors({ general: result.message });
+      }
+    } catch (error) {
         console.error(error);
       setErrors({ general: 'Failed to complete profile. Please try again.' });
     } finally {
