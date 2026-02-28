@@ -24,6 +24,8 @@ app.use(
   }),
 );
 
+app.options("*", cors());
+
 app.use(express.json());
 
 // rate limiter global
