@@ -1,5 +1,16 @@
 # Architecture
 
+## Overview
+
+PROJECT GO follows a client-server architecture.
+
+- **Frontend:** React (Vite)
+- **Backend:** Node.js + Express
+- **Database:** MongoDB Atlas
+- **ODM:** Mongoose
+
+---
+
 ## Repository Structure
 
 PROJECT-GO/
@@ -8,28 +19,80 @@ PROJECT-GO/
 - backend/
 - docs/
 
-## Backend
-
-Node.js
-↓
-Express
-↓
-Routes
-↓
-Controllers (coming soon)
-↓
-Services (coming soon)
-↓
-Database (coming soon)
-
 ## Current Architecture
 
+```text
 Client
-↓
-Express Application
-↓
+   │
+   ▼
+React Frontend
+   │
+   │ HTTP Request
+   ▼
+Express Server
+   │
+   ▼
 Middleware
-↓
-Router
-↓
-Response
+   │
+   ▼
+Routes
+   │
+   ▼
+Controllers (Coming Soon)
+   │
+   ▼
+Services (Coming Soon)
+   │
+   ▼
+Mongoose
+   │
+   ▼
+MongoDB Atlas
+```
+
+---
+
+## Backend Folder Structure
+
+```text
+backend/
+└── src/
+    ├── config/
+    │   └── database.js
+    ├── routes/
+    │   └── health.routes.js
+    ├── app.js
+    └── server.js
+```
+
+---
+
+## Startup Sequence
+
+```text
+Load Environment Variables
+        │
+        ▼
+Connect MongoDB
+        │
+        ▼
+Create Express Server
+        │
+        ▼
+Accept Requests
+```
+
+The server only starts after a successful database connection.
+
+---
+
+## Future Architecture
+
+- MVC Pattern
+- Service Layer
+- Authentication & Authorization
+- Input Validation
+- Error Handling Middleware
+- Logging
+- File Uploads
+- Real-time Features (if required)

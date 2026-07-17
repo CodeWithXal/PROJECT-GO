@@ -9,3 +9,12 @@
 - Express backend
 - Health check endpoint
 - Environment variable support
+
+
+## v0.2.0
+
+### Added
+
+- MongoDB Atlas connection
+- Database startup sequence
+- Async server initialization

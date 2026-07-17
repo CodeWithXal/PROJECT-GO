@@ -5,13 +5,14 @@
 - [x] Monorepo
 - [x] Express Setup
 - [x] Health Check
-- [ ] MongoDB
-- [ ] MVC
+- [x] MongoDB
+- [ ] MVC Structure
 - [ ] Error Handling
 
 ## Phase 2
 
 - [ ] Authentication
+- [ ] User Model
 - [ ] User Profile
 - [ ] Dashboard
 

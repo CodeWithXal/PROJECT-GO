@@ -115,3 +115,75 @@ GET /api/v1/health
 - Think about architecture before syntax.
 - Understand why code works.
 - Test every feature before committing.
+
+
+# Today I Learned (TLD)
+
+---
+
+## 2026-07-17 — Backend Initialization & MongoDB Connection
+
+### Concepts
+
+#### Express Application vs Router
+
+- `express()` creates the main application.
+- `express.Router()` creates modular route handlers.
+
+#### Middleware
+
+- Middleware runs before the route handler.
+- It must either send a response or call `next()`.
+
+#### express.json()
+
+- Parses incoming JSON request bodies.
+- Makes data available in `req.body`.
+
+#### Environment Variables
+
+- `dotenv` loads variables from `.env` into `process.env`.
+- Sensitive information should never be hardcoded.
+
+#### MongoDB vs Mongoose
+
+- MongoDB stores the data.
+- Mongoose is an ODM used to interact with MongoDB.
+
+#### Async Startup
+
+- Database connection is asynchronous.
+- The server should start only after a successful database connection.
+
+#### Startup Sequence
+
+```text
+Load .env
+    ↓
+Connect Database
+    ↓
+Start Express Server
+```
+
+#### process.exit()
+
+- `process.exit(0)` → Successful termination.
+- `process.exit(1)` → Program terminated due to an error.
+
+---
+
+### Bugs Solved
+
+- Missing `dev` script in `package.json`.
+- `Cannot GET /` because no root route existed.
+- Missing `MONGODB_URI` in `.env`.
+- Incorrect use of Markdown backticks inside `console.log()`.
+
+---
+
+### Key Takeaways
+
+- Separate startup logic from application logic.
+- Wait for critical services before accepting requests.
+- Read error messages carefully before debugging.
+- Keep configuration, routing, and startup responsibilities separate.

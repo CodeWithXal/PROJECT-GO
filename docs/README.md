@@ -4,6 +4,8 @@ PROJECT GO is a full-stack productivity and project management platform being bu
 
 This repository follows a monorepo architecture containing both the frontend and backend.
 
+---
+
 ## Tech Stack
 
 ### Frontend
@@ -16,6 +18,8 @@ This repository follows a monorepo architecture containing both the frontend and
 - Express.js
 - MongoDB (coming soon)
 
+---
+
 ## Project Structure
 
 PROJECT-GO/
@@ -23,6 +27,8 @@ PROJECT-GO/
 ├── backend/
 ├── README.md
 └── package.json
+
+---
 
 ## Getting Started
 
@@ -48,15 +54,43 @@ npm install
 npm run dev
 ```
 
+---
+
+# PROJECT GO Documentation
+
+## Architecture
+- ARCHITECTURE.md
+
+## API
+- API.md
+
+## Development
+- TLD.md
+- DEVELOPMENT.md
+
+## Deployment
+- DEPLOYMENT-LOG.md
+- ENVIRONMENTS.md
+
+## Planning
+- ROADMAP.md
+- CHANGELOG.md
+- KNOWN-ISSUES.md
+
+## Architecture Decision Records
+- ADR/
+
+---
+
 ## Current Progress
 
-- ✅ Monorepo initialized
-- ✅ Express backend setup
-- ✅ React frontend setup
-- ✅ Health check API
-- ⏳ MongoDB connection
-- ⏳ Authentication
-- ⏳ Dashboard
+- ✅ Monorepo setup
+- ✅ GitHub repository initialized
+- ✅ Express backend configured
+- ✅ MongoDB Atlas connected
+- ✅ Health check endpoint implemented
+
+---
 
 ## License
 
