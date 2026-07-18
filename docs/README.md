@@ -89,6 +89,28 @@ npm run dev
 - ✅ Express backend configured
 - ✅ MongoDB Atlas connected
 - ✅ Health check endpoint implemented
+- ✅ User creation endpoint implemented
+
+---
+
+
+## Current Features
+
+- Express backend setup
+- MongoDB Atlas connection
+- Health check endpoint
+- User model using Mongoose
+- Create User API endpoint
+
+
+---
+
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | /api/v1/health | Health check |
+| POST | /api/v1/users | Create a new user |
+
 
 ---
 

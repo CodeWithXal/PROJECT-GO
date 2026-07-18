@@ -50,6 +50,53 @@ Response
 
 ---
 
+## Create User
+
+**Endpoint**
+
+```http
+POST /api/v1/users
+```
+
+### Request Body
+
+```json
+{
+  "username": "string",
+  "email": "string",
+  "password": "string"
+}
+```
+
+### Success Response
+
+**Status:** `201 Created`
+
+```json
+{
+  "success": true,
+  "message": "User created successfully",
+  "data": {
+    "username": "string",
+    "email": "string"
+  }
+}
+```
+
+### Error Response
+
+**Status:** `500 Internal Server Error`
+
+```json
+{
+  "success": false,
+  "message": "Something went wrong"
+}
+```
+
+
+
+
 ## Future Endpoints
 
 ### Authentication

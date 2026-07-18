@@ -187,3 +187,30 @@ Start Express Server
 - Wait for critical services before accepting requests.
 - Read error messages carefully before debugging.
 - Keep configuration, routing, and startup responsibilities separate.
+
+
+# Today I Learned (TLD)
+
+---
+
+## 2026-07-18 — User Creation Endpoint
+
+### Concepts
+
+#### Mongoose Schema
+- A schema defines the structure and validation rules for documents stored in MongoDB.
+
+#### Mongoose Model
+- A model is created from a schema and is used to interact with a MongoDB collection.
+
+#### MVC Request Flow
+- A client request flows through Route → Controller → Model → Database → Response.
+
+#### Express Router
+- Routes map HTTP endpoints to controller functions.
+
+#### Creating Documents
+- `User.create()` creates and saves a new document in MongoDB.
+
+#### Async Database Operations
+- Database operations are asynchronous and should be awaited before sending a response.

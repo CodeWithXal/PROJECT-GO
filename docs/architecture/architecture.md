@@ -86,6 +86,23 @@ The server only starts after a successful database connection.
 
 ---
 
+
+## User Creation Flow
+
+Client
+↓
+POST /api/v1/users
+↓
+user.routes.js
+↓
+createUser Controller
+↓
+User Model (Mongoose)
+↓
+MongoDB Atlas
+↓
+JSON Response
+
 ## Future Architecture
 
 - MVC Pattern
