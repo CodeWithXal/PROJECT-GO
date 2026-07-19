@@ -214,3 +214,38 @@ Start Express Server
 
 #### Async Database Operations
 - Database operations are asynchronous and should be awaited before sending a response.
+
+
+---
+
+
+# Today I Learned (TLD)
+
+---
+
+## 2026-07-19 — Request Validation with Zod
+
+### Concepts
+
+#### Zod Validation
+
+- Learned why request validation should happen before the controller.
+- Used Zod schemas to validate incoming request data.
+
+#### Validation Middleware
+
+- Built a reusable validation middleware using `safeParse()`.
+- Learned how middleware uses `next()` to continue the request lifecycle.
+
+#### Higher-Order Middleware
+
+- Learned how a function can return middleware, allowing the same validation logic to be reused with different schemas.
+
+#### Validated Request Data
+
+- Passed validated request data to controllers using `req.validatedData`.
+
+#### MongoDB Duplicate Key Errors
+
+- Learned that duplicate unique fields produce MongoDB error code `11000`.
+- Understood the difference between validation errors and database constraint errors.

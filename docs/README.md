@@ -16,7 +16,7 @@ This repository follows a monorepo architecture containing both the frontend and
 ### Backend
 - Node.js
 - Express.js
-- MongoDB (coming soon)
+- MongoDB
 
 ---
 
@@ -66,7 +66,6 @@ npm run dev
 
 ## Development
 - TLD.md
-- DEVELOPMENT.md
 
 ## Deployment
 - DEPLOYMENT-LOG.md
@@ -89,8 +88,12 @@ npm run dev
 - ✅ Express backend configured
 - ✅ MongoDB Atlas connected
 - ✅ Health check endpoint implemented
-- ✅ User creation endpoint implemented
-
+- ✅ User Model
+- ✅ User Creation API
+- ✅ Zod Validation
+- ✅ Validation Middleware
+- ⏳ Password Hashing
+- ⏳ Authentication
 ---
 
 
@@ -101,6 +104,9 @@ npm run dev
 - Health check endpoint
 - User model using Mongoose
 - Create User API endpoint
+- Zod request validation
+- Reusable validation middleware
+- Duplicate username/email detection
 
 
 ---

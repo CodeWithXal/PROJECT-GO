@@ -36,3 +36,18 @@
 
 - Verified user creation through Postman.
 - Verified document creation in MongoDB Atlas.
+
+
+---
+
+## Added
+
+- Zod validation for user creation requests.
+- Generic reusable validation middleware.
+- Request validation before controller execution.
+- Validated request data available through `req.validatedData`.
+
+## Improved
+
+- User creation endpoint now validates input before interacting with the database.
+- Added handling for duplicate unique field errors.

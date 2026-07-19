@@ -38,7 +38,7 @@ Middleware
 Routes
    │
    ▼
-Controllers (Coming Soon)
+Controllers 
    │
    ▼
 Services (Coming Soon)
@@ -102,6 +102,28 @@ User Model (Mongoose)
 MongoDB Atlas
 ↓
 JSON Response
+
+
+## Request Lifecycle
+
+Client
+    │
+    ▼
+Express Route
+    │
+    ▼
+Validation Middleware (Zod)
+    │
+    ▼
+Controller
+    │
+    ▼
+Mongoose Model
+    │
+    ▼
+MongoDB
+
+
 
 ## Future Architecture
 

@@ -6,13 +6,13 @@
 - [x] Express Setup
 - [x] Health Check
 - [x] MongoDB
-- [ ] MVC Structure
-- [ ] Error Handling
+- [x] MVC Structure
+- [x] Error Handling
 
 ## Phase 2
 
 - [ ] Authentication
-- [ ] User Model
+- [x] User Model
 - [ ] User Profile
 - [ ] Dashboard
 
