@@ -1,13 +1,15 @@
 import User from "../models/user.model.js";
+import bcrypt from "bcrypt";
 
 
 async function createUser(req,res){
     try{
-        const {username, email, password} = req.validatedData;
+        const{username, email, password}  = req.validatedData;
+        const hashedPassword = await bcrypt.hash(password, 12);
         const user = await User.create({
-            username: username,
-            email: email,
-            password: password, 
+            username,
+            email,
+            password: hashedPassword, 
         });
 
         res.status(201).json({
