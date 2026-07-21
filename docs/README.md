@@ -107,6 +107,8 @@ npm run dev
 - Zod request validation
 - Reusable validation middleware
 - Duplicate username/email detection
+- bcrypt password hashing
+- Secure password storage
 
 
 ---

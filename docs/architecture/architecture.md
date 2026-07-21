@@ -124,6 +124,25 @@ Mongoose Model
 MongoDB
 
 
+### Password Hashing
+
+After successful request validation, the controller hashes the user's password using bcrypt before creating the database document.
+
+Request Flow
+
+Client
+    │
+    ▼
+Validation Middleware
+    │
+    ▼
+Controller
+    ├── Hash Password (bcrypt)
+    ├── Create User
+    ▼
+MongoDB
+
+
 
 ## Future Architecture
 

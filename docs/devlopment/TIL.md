@@ -249,3 +249,28 @@ Start Express Server
 
 - Learned that duplicate unique fields produce MongoDB error code `11000`.
 - Understood the difference between validation errors and database constraint errors.
+
+
+
+## 2026-07-20 — Password Hashing with bcrypt
+
+### Concepts
+
+#### Password Hashing
+
+- Learned why passwords should never be stored in plain text.
+- Used bcrypt to hash passwords before storing them.
+
+#### bcrypt
+
+- Learned the difference between `bcrypt.hash()` and `bcrypt.compare()`.
+- Used a cost factor of 12 for password hashing.
+
+#### Salt
+
+- Learned that bcrypt automatically generates a unique salt for every password.
+- Understood that identical passwords produce different hashes.
+
+#### Controller Responsibility
+
+- Learned that password hashing is business logic and belongs in the controller before creating the user.

@@ -51,3 +51,13 @@
 
 - User creation endpoint now validates input before interacting with the database.
 - Added handling for duplicate unique field errors.
+
+
+## Added
+
+- bcrypt password hashing before user creation.
+- Secure password storage using bcrypt hashes.
+
+## Improved
+
+- User passwords are no longer stored in plain text.
