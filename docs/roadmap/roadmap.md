@@ -27,3 +27,20 @@
 - [ ] Deployment
 - [ ] Monitoring
 - [ ] CI/CD
+
+
+## Completed
+
+- Authentication module
+- Signup endpoint
+- Login endpoint
+- Password hashing (bcrypt)
+- Password verification (bcrypt.compare)
+
+## Next Milestone
+
+- JWT generation
+- HttpOnly cookies
+- Authentication middleware
+- Protected routes
+- Logout

@@ -92,8 +92,12 @@ npm run dev
 - ✅ User Creation API
 - ✅ Zod Validation
 - ✅ Validation Middleware
-- ⏳ Password Hashing
-- ⏳ Authentication
+- ✅ Password Hashing (bcrypt)
+- ✅ Password Verification (bcrypt.compare())
+- ⏳ JWT Authentication
+- ⏳ HttpOnly Cookies
+- ⏳ Protected Routes
+
 ---
 
 

@@ -95,6 +95,50 @@ POST /api/v1/users
 ```
 
 
+## POST /api/v1/auth/signup
+
+Registers a new user.
+
+### Request Body
+
+- username
+- email
+- password
+
+### Process
+
+- Validate request
+- Hash password using bcrypt
+- Store user
+
+### Response
+
+201 Created
+
+
+## POST /api/v1/auth/login
+
+Authenticates an existing user.
+
+### Request Body
+
+- email
+- password
+
+### Process
+
+- Validate request
+- Find user by email
+- Compare password using bcrypt
+- Return success (JWT generation planned)
+
+### Responses
+
+200 OK
+
+401 Unauthorized
+
+Invalid email or password
 
 
 ## Future Endpoints
@@ -102,7 +146,6 @@ POST /api/v1/users
 ### Authentication
 
 - POST /auth/register
-- POST /auth/login
 - POST /auth/logout
 
 ### User

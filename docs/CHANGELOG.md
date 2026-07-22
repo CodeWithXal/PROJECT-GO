@@ -40,24 +40,42 @@
 
 ---
 
-## Added
+## 2026-07-20
+
+### Added
 
 - Zod validation for user creation requests.
 - Generic reusable validation middleware.
 - Request validation before controller execution.
 - Validated request data available through `req.validatedData`.
 
-## Improved
+### Improved
 
 - User creation endpoint now validates input before interacting with the database.
 - Added handling for duplicate unique field errors.
 
 
-## Added
+## 2026-07-21
+
+### Added
 
 - bcrypt password hashing before user creation.
 - Secure password storage using bcrypt hashes.
 
-## Improved
+### Improved
 
 - User passwords are no longer stored in plain text.
+
+
+## 2026-07-22
+
+### Added
+
+- Authentication module.
+- Signup endpoint.
+- Login endpoint.
+- Password verification using bcrypt.compare().
+
+### Changed
+
+- Moved authentication logic from user module into dedicated auth module.

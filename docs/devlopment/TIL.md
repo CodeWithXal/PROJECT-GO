@@ -274,3 +274,72 @@ Start Express Server
 #### Controller Responsibility
 
 - Learned that password hashing is business logic and belongs in the controller before creating the user.
+
+
+## 2026-07-22 — Authentication Module
+
+## What I learned
+
+### Separation of Concerns
+
+Authentication should be separated from user management.
+
+Authentication handles:
+- Signup
+- Login
+- Password hashing
+- Password verification
+
+User module will handle:
+- User profile
+- User-related operations
+
+---
+
+### Login Flow
+
+Client
+
+↓
+
+Validate Request
+
+↓
+
+Find User by Email
+
+↓
+
+Compare Password using bcrypt.compare()
+
+↓
+
+Return success or "Invalid email or password"
+
+---
+
+### Generic Authentication Errors
+
+Never reveal whether:
+- the email exists
+- or the password is incorrect.
+
+Instead, always return:
+
+"Invalid email or password"
+
+This prevents user enumeration attacks.
+
+---
+
+### Debugging Lesson
+
+Every request receives a new `req` object.
+
+`req.validatedData` only exists if the request passes through the validation middleware.
+
+Therefore, every endpoint that relies on validated data must use:
+
+validate(schema)
+
+before reaching the controller.

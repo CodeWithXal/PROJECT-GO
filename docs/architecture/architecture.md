@@ -144,11 +144,47 @@ MongoDB
 
 
 
+
+## Authentication Module
+
+Authentication is implemented as a dedicated module.
+
+Responsibilities:
+
+- User registration (Signup)
+- User authentication (Login)
+- Password hashing (bcrypt)
+- Password verification (bcrypt.compare)
+- JWT generation (Planned)
+
+### Authentication Request Flow
+
+Client
+    │
+    ▼
+Route
+    │
+    ▼
+Validation Middleware (Zod)
+    │
+    ▼
+Auth Controller
+    │
+    ├── Signup
+    │      ├── Hash Password
+    │      └── Create User
+    │
+    └── Login
+           ├── Find User
+           ├── Compare Password
+           └── (Future) Generate JWT
+
+
+
 ## Future Architecture
 
-- MVC Pattern
-- Service Layer
-- Authentication & Authorization
+
+- Authorization
 - Input Validation
 - Error Handling Middleware
 - Logging
