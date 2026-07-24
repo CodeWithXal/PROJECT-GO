@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
+import generateAccessToken from "../utils/jwt.js";
 
 
 async function signup(req,res){
@@ -58,14 +59,33 @@ async function login(req, res){
                 })
             )
         }
+        
+        const token = generateAccessToken(user._id);
+
+        res.cookie(
+            'token',
+            token,
+            {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                maxAge: process.env.COOKIE_MAX_AGE
+            }
+        )
+
         res.status(200).json({
                 "success": true,
                 "message": "Login successful"
             });
+
+
+        
     }
     catch(error){
         console.error(error);
     }
+
+    
 }
 
 

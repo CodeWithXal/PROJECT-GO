@@ -1,4 +1,4 @@
-# ADR-004: Separate Authentication from User Management
+# ADR-005: Separate Authentication from User Management
 
 ## Status
 

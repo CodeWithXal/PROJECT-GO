@@ -181,6 +181,32 @@ Auth Controller
 
 
 
+## Authentication Flow
+
+Login Request
+    │
+    ▼
+Validation Middleware
+    │
+    ▼
+Auth Controller
+    │
+    ▼
+Find User
+    │
+    ▼
+Verify Password (bcrypt)
+    │
+    ▼
+Generate JWT
+    │
+    ▼
+Store JWT in HttpOnly Cookie
+    │
+    ▼
+Return Success
+
+
 ## Future Architecture
 
 

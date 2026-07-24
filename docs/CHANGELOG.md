@@ -40,7 +40,7 @@
 
 ---
 
-## 2026-07-20
+## 2026-07-19
 
 ### Added
 
@@ -79,3 +79,13 @@
 ### Changed
 
 - Moved authentication logic from user module into dedicated auth module.
+
+
+## 2026-07-24
+
+### Added
+
+- JWT access token generation utility.
+- Login validation schema.
+- HttpOnly cookie-based authentication.
+- Secure cookie configuration.

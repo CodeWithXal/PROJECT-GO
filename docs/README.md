@@ -113,6 +113,9 @@ npm run dev
 - Duplicate username/email detection
 - bcrypt password hashing
 - Secure password storage
+- JWT Access Token Generation
+- HttpOnly Cookie Authentication
+- Secure Cookie Configuration
 
 
 ---

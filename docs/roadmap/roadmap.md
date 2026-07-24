@@ -36,11 +36,13 @@
 - Login endpoint
 - Password hashing (bcrypt)
 - Password verification (bcrypt.compare)
+- JWT generation
+- HttpOnly cookies
+
 
 ## Next Milestone
 
-- JWT generation
-- HttpOnly cookies
+
 - Authentication middleware
 - Protected routes
 - Logout

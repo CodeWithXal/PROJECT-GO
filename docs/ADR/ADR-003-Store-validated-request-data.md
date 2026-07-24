@@ -1,4 +1,4 @@
-# ADR-002: Store Validated Request Data in req.validatedData
+# ADR-003: Store Validated Request Data in req.validatedData
 
 ## Status
 

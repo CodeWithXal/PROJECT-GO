@@ -1,4 +1,4 @@
-# ADR-003: Hash Passwords Before Database Storage
+# ADR-004: Hash Passwords Before Database Storage
 
 ## Status
 
