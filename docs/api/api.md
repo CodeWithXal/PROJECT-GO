@@ -141,6 +141,23 @@ Authenticates an existing user.
 Invalid email or password
 
 
+
+## GET /api/v1/auth/me
+
+Gets the logged in user
+
+### process
+
+- Reads authenticated user from JWT
+- Returns current user (without password)
+
+### Responses
+
+200 OK
+
+401 Unauthorized
+
+
 ## Future Endpoints
 
 ### Authentication

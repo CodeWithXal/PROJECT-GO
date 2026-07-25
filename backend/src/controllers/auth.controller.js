@@ -1,6 +1,6 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
-import generateAccessToken from "../utils/jwt.js";
+import {generateAccessToken} from "../utils/jwt.js";
 
 
 async function signup(req,res){
@@ -89,6 +89,35 @@ async function login(req, res){
 }
 
 
+async function getCurrentUser(req, res){
+    try{
+        const userId = req.user.userId;
+        const user = await User.findById(userId).select("-password");
+        if(!user){
+            return(
+                res.status(404).json({
+                    "success": false,
+                    "message": "User not found"
+                })
+            )
+        }
+
+        res.status(200).json({
+            "success": true,
+            "message": "User found",
+            "data": user
+        })
+    }
+    catch(error){
+        console.error(error.message);
+        res.status(500).json({
+            "success":  false,
+             "message": "something went wrong"
+        })
+    }
+}
 
 
-export {signup, login};
+
+
+export {signup, login, getCurrentUser};

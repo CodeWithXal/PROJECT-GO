@@ -343,3 +343,313 @@ Therefore, every endpoint that relies on validated data must use:
 validate(schema)
 
 before reaching the controller.
+
+
+
+## 2026-07-24 — Authentication Module
+
+## What I Learned
+
+### Separation of Concerns
+
+Authentication should be separated from user management.
+
+Authentication handles:
+
+- Signup
+- Login
+- Password hashing
+- Password verification
+
+User module will handle:
+
+- User profile
+- User-related operations
+
+---
+
+### Signup Flow
+
+Client
+
+↓
+
+Validate Request
+
+↓
+
+Hash Password using `bcrypt.hash()`
+
+↓
+
+Store User in Database
+
+↓
+
+Return Success Response
+
+---
+
+### Login Flow
+
+Client
+
+↓
+
+Validate Request
+
+↓
+
+Find User by Email
+
+↓
+
+Compare Password using `bcrypt.compare()`
+
+↓
+
+Generate JWT
+
+↓
+
+Store JWT in HttpOnly Cookie
+
+↓
+
+Return Success Response
+
+---
+
+### Generic Authentication Errors
+
+Never reveal whether:
+
+- the email exists
+- or the password is incorrect.
+
+Instead, always return:
+
+"Invalid email or password"
+
+This prevents user enumeration attacks.
+
+---
+
+### Password Hashing
+
+Passwords should never be stored in plain text.
+
+During Signup:
+
+- Hash the password using `bcrypt.hash()`.
+- Store only the hashed password.
+
+During Login:
+
+- Compare the entered password with the stored hash using `bcrypt.compare()`.
+
+---
+
+### JSON Web Tokens (JWT)
+
+JWTs are used to authenticate users after login.
+
+The payload should contain only the minimum required information.
+
+For PROJECT GO:
+
+- `userId`
+
+JWTs are generated using:
+
+```javascript
+jwt.sign()
+```
+
+---
+
+### HttpOnly Cookies
+
+JWTs are stored inside HttpOnly cookies.
+
+Cookie options:
+
+- `httpOnly` → Prevents JavaScript access.
+- `secure` → HTTPS only in production.
+- `sameSite` → Helps prevent CSRF attacks.
+- `maxAge` → Cookie lifetime.
+
+---
+
+### Debugging Lesson
+
+Every request receives a new `req` object.
+
+`req.validatedData` only exists if the request passes through the validation middleware.
+
+Therefore, every endpoint that relies on validated data must use:
+
+```javascript
+validate(schema)
+```
+
+before reaching the controller.
+
+---
+
+### Engineering Decisions
+
+- Authentication logic belongs inside `auth.controller.js`.
+- Authentication routes belong inside `auth.routes.js`.
+- Authentication validation belongs inside `auth.validation.js`.
+- JWT generation should be isolated inside `utils/jwt.js`.
+
+
+
+
+## 2026-07-25 — JWT Authentication & Protected Routes
+
+## What I Learned
+
+### JWT Verification
+
+JWTs are verified using `jwt.verify()`.
+
+- Returns the decoded payload if the token is valid.
+- Throws an exception if the token is invalid or expired.
+- The decoded payload is attached to `req.user`.
+
+---
+
+### Authentication Middleware
+
+The authentication middleware is responsible only for authentication.
+
+It should:
+
+- Read the JWT from the HttpOnly cookie.
+- Verify the JWT.
+- Attach the decoded payload to `req.user`.
+- Return `401 Unauthorized` if authentication fails.
+- Call `next()` when authentication succeeds.
+
+It should **not** perform business logic or database queries.
+
+---
+
+### Protected Route Flow
+
+Client
+
+↓
+
+HttpOnly Cookie
+
+↓
+
+Authentication Middleware
+
+↓
+
+Verify JWT
+
+↓
+
+Attach `req.user`
+
+↓
+
+Protected Controller
+
+↓
+
+Database
+
+↓
+
+Response
+
+---
+
+### Cookie Parser
+
+Browsers send cookies inside the HTTP `Cookie` header.
+
+`cookie-parser`:
+
+- Parses the Cookie header.
+- Makes cookies available through `req.cookies`.
+- Eliminates manual cookie parsing.
+
+---
+
+### Current User Endpoint
+
+The authenticated user's ID is available through:
+
+```javascript
+req.user.userId
+```
+
+The controller:
+
+- Retrieves the user using `findById()`.
+- Excludes the password using:
+
+```javascript
+.select("-password")
+```
+
+- Returns only the required user information.
+
+---
+
+### Error Handling
+
+Authentication errors:
+
+- Missing token → `401 Unauthorized`
+- Invalid or expired JWT → `401 Unauthorized`
+
+Application errors:
+
+- User not found → `404 Not Found`
+- Unexpected server errors → `500 Internal Server Error`
+
+---
+
+### Middleware Responsibilities
+
+Validation Middleware
+
+- Validates incoming request data.
+- Stores validated data inside `req.validatedData`.
+
+Authentication Middleware
+
+- Authenticates the request.
+- Stores the authenticated user's JWT payload inside `req.user`.
+
+Controllers
+
+- Handle business logic.
+- Query the database only when required.
+
+---
+
+### Engineering Decisions
+
+- Store JWTs in HttpOnly cookies instead of Local Storage.
+- Keep JWT payload minimal by storing only `userId`.
+- Authentication middleware should only verify identity.
+- Controllers should fetch additional user information when needed.
+- Never expose sensitive fields such as passwords in API responses.
+
+---
+
+### Debugging Lessons
+
+- `jwt.verify()` throws exceptions instead of returning `false`.
+- Exceptions immediately transfer execution to the `catch` block.
+- Every protected route must pass through the authentication middleware before reaching the controller.
+- Consistent API response structure (`success`, `message`, `data`) improves maintainability.

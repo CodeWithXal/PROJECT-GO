@@ -89,3 +89,19 @@
 - Login validation schema.
 - HttpOnly cookie-based authentication.
 - Secure cookie configuration.
+
+
+## 2026-07-25
+
+### Added
+
+- JWT verification utility.
+- Authentication middleware for protected routes.
+- Protected endpoint to retrieve the authenticated user's profile (`GET /api/v1/auth/me`).
+
+### Improved
+
+- Authentication requests now verify JWTs stored in HttpOnly cookies.
+- Authenticated user information is attached to `req.user`.
+- User profile responses exclude the password field.
+- End-to-end authentication flow verified through Postman.

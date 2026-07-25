@@ -11,8 +11,13 @@ function generateAccessToken(userId){
                 algorithm: "HS256"   
             }
         )
-    console.log( "token: ", token);
-    return token ;
+        //console.log( "token: ", token);
+        return token ;
 }
 
-export default generateAccessToken;
+
+function verifyAccessToken(token){
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        return decoded;
+}
+export {generateAccessToken, verifyAccessToken};

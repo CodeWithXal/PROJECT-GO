@@ -94,9 +94,9 @@ npm run dev
 - ✅ Validation Middleware
 - ✅ Password Hashing (bcrypt)
 - ✅ Password Verification (bcrypt.compare())
-- ⏳ JWT Authentication
-- ⏳ HttpOnly Cookies
-- ⏳ Protected Routes
+- ✅ JWT Authentication
+- ✅ HttpOnly Cookie Authentication
+- ✅ Protected Routes
 
 ---
 
@@ -116,15 +116,23 @@ npm run dev
 - JWT Access Token Generation
 - HttpOnly Cookie Authentication
 - Secure Cookie Configuration
+- JWT verification
+- Authentication middleware
+- Protected routes
+- Current authenticated user endpoint
 
 
 ---
 
+## API Table
 
 | Method | Endpoint | Description |
 |---------|----------|-------------|
 | GET | /api/v1/health | Health check |
 | POST | /api/v1/users | Create a new user |
+| POST | /api/v1/auth/signup | Register a new user |
+| POST | /api/v1/auth/login | Authenticate user |
+| GET | /api/v1/auth/me | Get authenticated user |
 
 
 ---
