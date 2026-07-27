@@ -2,70 +2,85 @@
 
 ## Overview
 
-PROJECT GO follows a client-server architecture.
+PROJECT GO follows a layered client-server architecture.
 
-- **Frontend:** React (Vite)
-- **Backend:** Node.js + Express
-- **Database:** MongoDB Atlas
-- **ODM:** Mongoose
+### Tech Stack
+
+**Frontend**
+- React
+- Vite
+- React Router
+- Axios
+
+**Backend**
+- Node.js
+- Express.js
+
+**Database**
+- MongoDB Atlas
+
+**ODM**
+- Mongoose
 
 ---
 
-## Repository Structure
-
-PROJECT-GO/
-
-- frontend/
-- backend/
-- docs/
-
-## Current Architecture
+# Repository Structure
 
 ```text
-Client
-   │
-   ▼
+PROJECT-GO/
+├── frontend/
+├── backend/
+└── docs/
+```
+
+---
+
+# High-Level Architecture
+
+```text
 React Frontend
-   │
-   │ HTTP Request
-   ▼
+        │
+        ▼
+Authentication Service
+        │
+        ▼
+Axios Client
+        │
+        ▼
 Express Server
-   │
-   ▼
+        │
+        ▼
 Middleware
-   │
-   ▼
+        │
+        ▼
 Routes
-   │
-   ▼
-Controllers 
-   │
-   ▼
-Services (Coming Soon)
-   │
-   ▼
+        │
+        ▼
+Controllers
+        │
+        ▼
 Mongoose
-   │
-   ▼
+        │
+        ▼
 MongoDB Atlas
 ```
 
 ---
 
-## Backend Folder Structure
+# Backend Architecture
 
 ```text
 backend/
 └── src/
     ├── config/
-    │   └── database.js
+    ├── controllers/
+    ├── middleware/
+    ├── models/
     ├── routes/
-    │   └── health.routes.js
+    ├── utils/
     ├── app.js
     └── server.js
 ```
-
----
 
 ## Startup Sequence
 
@@ -76,36 +91,25 @@ Load Environment Variables
 Connect MongoDB
         │
         ▼
-Create Express Server
+Create Express Application
         │
         ▼
-Accept Requests
+Register Middleware
+        │
+        ▼
+Register Routes
+        │
+        ▼
+Start Server
 ```
 
-The server only starts after a successful database connection.
+The server starts only after a successful database connection.
 
 ---
 
+# Request Lifecycle
 
-## User Creation Flow
-
-Client
-↓
-POST /api/v1/users
-↓
-user.routes.js
-↓
-createUser Controller
-↓
-User Model (Mongoose)
-↓
-MongoDB Atlas
-↓
-JSON Response
-
-
-## Request Lifecycle
-
+```text
 Client
     │
     ▼
@@ -115,99 +119,94 @@ Express Route
 Validation Middleware (Zod)
     │
     ▼
+Authentication Middleware (Protected Routes)
+    │
+    ▼
 Controller
     │
     ▼
 Mongoose Model
     │
     ▼
-MongoDB
+MongoDB Atlas
+```
 
+---
 
-### Password Hashing
+# Authentication Architecture
 
-After successful request validation, the controller hashes the user's password using bcrypt before creating the database document.
-
-Request Flow
-
-Client
-    │
-    ▼
-Validation Middleware
-    │
-    ▼
-Controller
-    ├── Hash Password (bcrypt)
-    ├── Create User
-    ▼
-MongoDB
-
-
-
-
-## Authentication Module
-
-Authentication is implemented as a dedicated module.
+Authentication is implemented as an independent module.
 
 Responsibilities:
 
-- User registration (Signup)
-- User authentication (Login)
-- Password hashing (bcrypt)
-- Password verification (bcrypt.compare)
-- JWT generation (Planned)
+- User Signup
+- User Login
+- Password Hashing
+- Password Verification
+- JWT Generation
+- JWT Verification
+- Cookie Authentication
 
-### Authentication Request Flow
+---
 
+## Signup Flow
+
+```text
 Client
     │
     ▼
-Route
-    │
-    ▼
-Validation Middleware (Zod)
-    │
-    ▼
-Auth Controller
-    │
-    ├── Signup
-    │      ├── Hash Password
-    │      └── Create User
-    │
-    └── Login
-           ├── Find User
-           ├── Compare Password
-           └── (Future) Generate JWT
-
-
-
-## Authentication Flow
-
-## Authentication Flow
-
-Client
-    │
-    ▼
-Login Request
+POST /api/v1/auth/signup
     │
     ▼
 Validation Middleware
     │
     ▼
-Authentication Controller
+Hash Password (bcrypt)
     │
     ▼
-bcrypt Password Verification
+Create User
     │
     ▼
-JWT Generation
+MongoDB Atlas
     │
     ▼
-HttpOnly Cookie
+JSON Response
+```
 
+---
+
+## Login Flow
+
+```text
+Client
+    │
+    ▼
+POST /api/v1/auth/login
+    │
+    ▼
+Validation Middleware
+    │
+    ▼
+Find User
+    │
+    ▼
+Compare Password (bcrypt)
+    │
+    ▼
+Generate JWT
+    │
+    ▼
+Set HttpOnly Cookie
+    │
+    ▼
+JSON Response
+```
+
+---
 
 ## Protected Request Flow
 
+```text
 Client
     │
     ▼
@@ -220,22 +219,150 @@ Authentication Middleware
 JWT Verification
     │
     ▼
-req.user
+Attach User → req.user
     │
     ▼
 Protected Controller
     │
     ▼
 Database
+    │
+    ▼
+JSON Response
+```
 
+---
 
+# Frontend Architecture
 
-## Future Architecture
+```text
+frontend/
+└── src/
+    ├── assets/
+    ├── components/
+    ├── lib/
+    ├── pages/
+    ├── services/
+    ├── App.jsx
+    └── main.jsx
+```
 
+## Pages
 
-- Authorization
-- Input Validation
-- Error Handling Middleware
-- Logging
+Route-level components.
+
+Examples:
+
+- Home
+- Login
+- Signup
+- Dashboard
+
+---
+
+## Components
+
+Reusable UI components.
+
+Current:
+
+- LoginForm
+
+Future:
+
+- SignupForm
+- Navbar
+- Footer
+- Buttons
+- Input Components
+
+---
+
+## Services
+
+Responsible for backend communication.
+
+Components never call Axios directly.
+
+Current:
+
+- auth.service.js
+
+Future:
+
+- user.service.js
+- project.service.js
+- task.service.js
+
+---
+
+## Lib
+
+Shared utilities.
+
+Current:
+
+- axios.js
+
+Responsibilities:
+
+- Base API URL
+- Default headers
+- Cookie credentials (`withCredentials`)
+
+---
+
+# Frontend Login Flow
+
+```text
+LoginForm
+        │
+        ▼
+auth.service.js
+        │
+        ▼
+Axios Instance
+        │
+        ▼
+POST /api/v1/auth/login
+        │
+        ▼
+Backend
+        │
+        ▼
+JWT Cookie
+        │
+        ▼
+Navigate → Dashboard
+```
+
+---
+
+# Design Principles
+
+PROJECT GO currently follows:
+
+- Separation of Concerns
+- Layered Architecture
+- MVC Pattern
+- Reusable Components
+- Service Layer
+- Shared Axios Client
+- Stateless Authentication (JWT)
+- HttpOnly Cookie Authentication
+- Single Responsibility Principle
+
+---
+
+# Future Architecture
+
+Planned additions:
+
+- Authorization (Roles & Permissions)
+- Refresh Tokens
+- Global Authentication Context
+- Route Protection
+- Centralized Error Handling
 - File Uploads
+- Project & Task Modules
 - Real-time Features (if required)

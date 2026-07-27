@@ -96,26 +96,36 @@
 
 # Completed Milestones
 
-- ✅ Backend Foundation
-- ✅ Authentication System
-    - Signup
-    - Login
-    - Password Hashing
-    - Password Verification
-    - JWT Authentication
-    - HttpOnly Cookies
-    - Authentication Middleware
-    - Protected Routes
-    - Current User Endpoint
+- Backend Foundation
+- Authentication System
+- Signup
+- Login
+- Password Hashing
+- Password Verification
+- JWT Authentication
+- HttpOnly Cookies
+- Authentication Middleware
+- Protected Routes
+- Current User Endpoint
+- Frontend login form
+- Axios client configuration
+- Authentication service
+- Login API integration
+- Loading state
+- Authentication error handling
+- Post-login navigation
 
 ---
 
-# Current Milestone
 
 🎯 **User Profile Module**
 
 Next objectives:
 
+- Protected dashboard
+- Fetch current user
+- Logout
+- Route protection
 - User Profile Schema
 - Get Profile Endpoint
 - Update Profile Endpoint

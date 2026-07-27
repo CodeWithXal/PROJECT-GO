@@ -105,3 +105,33 @@
 - Authenticated user information is attached to `req.user`.
 - User profile responses exclude the password field.
 - End-to-end authentication flow verified through Postman.
+
+
+## 2026-07-26
+
+### Added
+
+- Initialized frontend foundation with React Router and project structure.
+
+
+## 2026-07-27
+
+### Added
+
+- LoginForm React component
+- Shared Axios client
+- Authentication service layer
+- Loading and error states
+- Frontend integration with backend login API
+- Navigation to dashboard after successful login
+
+### Configured
+
+- Axios credentials
+- Backend CORS for frontend communication
+
+### Verified
+
+- Login flow
+- HttpOnly cookie storage
+- Session persistence after page refresh

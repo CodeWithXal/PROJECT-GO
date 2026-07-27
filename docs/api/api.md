@@ -2,17 +2,17 @@
 
 ---
 
-## Base URL
+# Base URL
 
 Development
 
-```
+```text
 http://localhost:5000
 ```
 
 Base API Route
 
-```
+```text
 /api/v1
 ```
 
@@ -20,13 +20,11 @@ Base API Route
 
 # Endpoints
 
-## Health Check
+---
 
-### GET
+# Health Check
 
-```
-/api/v1/health
-```
+## GET `/api/v1/health`
 
 ### Description
 
@@ -34,13 +32,7 @@ Checks whether the backend server is running.
 
 ### Success Response
 
-Status Code
-
-```
-200 OK
-```
-
-Response
+**Status:** `200 OK`
 
 ```json
 {
@@ -50,13 +42,13 @@ Response
 
 ---
 
-## Create User
+# Authentication
 
-**Endpoint**
+## POST `/api/v1/auth/signup`
 
-```http
-POST /api/v1/users
-```
+### Description
+
+Creates a new user account.
 
 ### Request Body
 
@@ -67,6 +59,13 @@ POST /api/v1/users
   "password": "string"
 }
 ```
+
+### Process
+
+- Validate request
+- Hash password using bcrypt
+- Create user
+- Store user in MongoDB
 
 ### Success Response
 
@@ -83,93 +82,168 @@ POST /api/v1/users
 }
 ```
 
-### Error Response
+### Error Responses
 
-**Status:** `500 Internal Server Error`
+**400 Bad Request**
 
-```json
-{
-  "success": false,
-  "message": "Something went wrong"
-}
-```
+Validation failed.
 
+**409 Conflict**
 
-## POST /api/v1/auth/signup
+User already exists.
 
-Registers a new user.
+**500 Internal Server Error**
 
-### Request Body
+Unexpected server error.
 
-- username
-- email
-- password
+---
 
-### Process
+## POST `/api/v1/auth/login`
 
-- Validate request
-- Hash password using bcrypt
-- Store user
-
-### Response
-
-201 Created
-
-
-## POST /api/v1/auth/login
+### Description
 
 Authenticates an existing user.
 
 ### Request Body
 
-- email
-- password
+```json
+{
+  "email": "string",
+  "password": "string"
+}
+```
 
 ### Process
 
 - Validate request
 - Find user by email
 - Compare password using bcrypt
-- Return success (JWT generation planned)
+- Generate JWT
+- Set HttpOnly cookie
+- Return authenticated user
 
-### Responses
+### Success Response
 
-200 OK
+**Status:** `200 OK`
 
-401 Unauthorized
+```json
+{
+  "success": true,
+  "message": "Login successful"
+}
+```
 
-Invalid email or password
+### Error Responses
 
+**400 Bad Request**
 
+Validation failed.
 
-## GET /api/v1/auth/me
+**401 Unauthorized**
 
-Gets the logged in user
+```json
+{
+  "success": false,
+  "message": "Invalid email or password"
+}
+```
 
-### process
+---
 
-- Reads authenticated user from JWT
-- Returns current user (without password)
+## GET `/api/v1/auth/me`
 
-### Responses
+### Description
 
-200 OK
-
-401 Unauthorized
-
-
-## Future Endpoints
+Returns the currently authenticated user.
 
 ### Authentication
 
-- POST /auth/register
-- POST /auth/logout
+Requires a valid HttpOnly JWT cookie.
 
-### User
+### Process
 
-- GET /users/profile
-- PATCH /users/profile
+- Read JWT cookie
+- Verify JWT
+- Attach decoded user to `req.user`
+- Fetch user from MongoDB
+- Return user without password
 
-### Projects
+### Success Response
 
-- CRUD endpoints (Coming Soon)
+**Status:** `200 OK`
+
+```json
+{
+  "success": true,
+  "message": "User found",
+  "data": {
+    "_id": "...",
+    "username": "...",
+    "email": "..."
+  }
+}
+```
+
+### Error Responses
+
+**401 Unauthorized**
+
+Authentication required.
+
+**404 Not Found**
+
+```json
+{
+  "success": false,
+  "message": "User not found"
+}
+```
+
+---
+
+# Authentication
+
+Authentication uses:
+
+- JWT (JSON Web Token)
+- HttpOnly Cookies
+- Cookie-based session persistence
+
+Clients should send requests with credentials enabled.
+
+---
+
+# Current API Summary
+
+| Method | Endpoint | Description |
+|---------|----------|-------------|
+| GET | `/api/v1/health` | Health check |
+| POST | `/api/v1/auth/signup` | Register a new user |
+| POST | `/api/v1/auth/login` | Authenticate user |
+| GET | `/api/v1/auth/me` | Get current authenticated user |
+
+---
+
+# Planned Endpoints
+
+## Authentication
+
+- POST `/api/v1/auth/logout`
+
+## Users
+
+- PATCH `/api/v1/users/profile`
+- DELETE `/api/v1/users`
+
+## Projects
+
+- CRUD operations
+
+## Tasks
+
+- CRUD operations
+
+## Collaboration
+
+- Team management
+- Project sharing

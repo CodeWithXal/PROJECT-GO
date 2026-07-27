@@ -653,3 +653,78 @@ Controllers
 - Exceptions immediately transfer execution to the `catch` block.
 - Every protected route must pass through the authentication middleware before reaching the controller.
 - Consistent API response structure (`success`, `message`, `data`) improves maintainability.
+
+
+## 2026-07-27 — Frontend Authentication
+
+### Service Layer
+
+Frontend components should communicate with backend APIs through a service layer instead of calling Axios directly.
+
+---
+
+### Axios Instance
+
+Creating a shared Axios instance centralizes the base URL, headers, and credentials configuration, making future changes easier.
+
+---
+
+### Loading State
+
+Using `isLoading` prevents duplicate requests and provides feedback while asynchronous operations are running.
+
+---
+
+### Error State
+
+Backend errors should be stored in component state and displayed in the UI instead of only logging them to the console.
+
+---
+
+### Authentication Flow
+
+The complete login flow is:
+
+Client Form
+
+↓
+
+Authentication Service
+
+↓
+
+Axios
+
+↓
+
+Backend
+
+↓
+
+JWT + HttpOnly Cookie
+
+↓
+
+Navigate to Dashboard
+
+---
+
+### Debugging
+
+When debugging API requests, inspect each layer systematically:
+
+React
+
+↓
+
+Network Request
+
+↓
+
+Backend Response
+
+↓
+
+Database
+
+instead of assuming the frontend code is incorrect.
