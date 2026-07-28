@@ -728,3 +728,166 @@ Backend Response
 Database
 
 instead of assuming the frontend code is incorrect.
+
+
+
+## 2026-07-28 - Frontend Authentication Flow
+
+---
+
+### Overview
+
+Today I implemented the frontend authentication flow for PROJECT GO. I learned how to structure API communication using a service layer and a shared Axios instance, how to fetch authenticated user data on page load, and how to manage loading and error states in React.
+
+---
+
+### Layered Authentication Architecture
+
+Authentication follows a layered architecture where each layer has a single responsibility.
+
+```text
+Login Form
+    │
+    ▼
+Authentication Service
+    │
+    ▼
+Shared Axios Instance
+    │
+    ▼
+Backend API
+    │
+    ▼
+Database
+```
+
+#### Responsibilities
+
+- **React Components** handle user interaction and rendering.
+- **Authentication Service** contains authentication-related business logic.
+- **Axios Instance** centralizes API configuration.
+- **Backend API** validates requests and returns responses.
+
+This separation makes the application easier to maintain, test, and scale.
+
+---
+
+### Shared Axios Instance
+
+Instead of importing Axios directly in every component, I created a shared Axios instance.
+
+#### Benefits
+
+- Configure the API base URL once.
+- Automatically send HttpOnly cookies using `withCredentials`.
+- Reuse common request headers.
+- Prepare the application for Axios interceptors in the future.
+
+---
+
+### Data Fetching with useEffect
+
+Data that should be loaded when a page first renders belongs inside `useEffect`.
+
+Flow:
+
+```text
+Component Mount
+      │
+      ▼
+useEffect
+      │
+      ▼
+Async Function
+      │
+      ▼
+API Request
+      │
+      ▼
+Update State
+```
+
+Since `useEffect` cannot be asynchronous, an async function is created inside it and called immediately.
+
+---
+
+### Loading and Error States
+
+Asynchronous requests should manage three different UI states:
+
+- Loading
+- Success
+- Error
+
+Using `try`, `catch`, and `finally` ensures that loading is always stopped regardless of whether the request succeeds or fails.
+
+---
+
+### Early Return Pattern
+
+Instead of writing large conditional JSX, I learned to return early for different UI states.
+
+```text
+Loading?
+    │
+    ▼
+Return Loading UI
+
+Error?
+    │
+    ▼
+Return Error UI
+
+Otherwise
+    │
+    ▼
+Return Dashboard
+```
+
+This makes React components easier to read and maintain.
+
+---
+
+### API Response Structure
+
+The backend returns responses in the following format:
+
+```json
+{
+  "success": true,
+  "message": "...",
+  "data": {
+    ...
+  }
+}
+```
+
+The authentication service returns `response.data`.
+
+Components only store the data they actually need.
+
+Example:
+
+```javascript
+setUser(response.data);
+```
+
+instead of storing the entire API response object.
+
+---
+
+### Key Takeaways
+
+- Separate UI from API communication.
+- Keep authentication logic inside services.
+- Use a shared Axios instance for all API requests.
+- Manage loading and error states explicitly.
+- Fetch data on component mount using `useEffect`.
+- Use early returns to simplify React components.
+- Store only the data required by the component.
+
+---
+
+#### Next Learning Goal
+
+Implement Axios response interceptors to automatically handle expired sessions (`401 Unauthorized`) by redirecting unauthenticated users to the login page.
