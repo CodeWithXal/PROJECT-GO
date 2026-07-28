@@ -135,3 +135,22 @@
 - Login flow
 - HttpOnly cookie storage
 - Session persistence after page refresh
+
+
+## 2026-07-28
+
+## [Unreleased]
+
+### Added
+- Frontend login page
+- Login form with controlled inputs
+- Authentication service layer
+- Shared Axios instance
+- Dashboard page with authenticated user fetching
+- Loading and error state handling
+- Dashboard navigation after successful login
+
+### Changed
+- API requests now use a centralized Axios client.
+- Authentication flow now follows:
+  Login Form → Auth Service → Axios → Backend.

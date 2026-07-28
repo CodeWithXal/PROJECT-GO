@@ -213,6 +213,10 @@ Clients should send requests with credentials enabled.
 
 ---
 
+### Frontend Usage
+
+Used by the Dashboard page to retrieve the currently authenticated user using the HttpOnly authentication cookie.
+
 # Current API Summary
 
 | Method | Endpoint | Description |

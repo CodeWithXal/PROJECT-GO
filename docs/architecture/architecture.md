@@ -238,13 +238,19 @@ JSON Response
 ```text
 frontend/
 └── src/
-    ├── assets/
     ├── components/
-    ├── lib/
+    │   └── LoginForm.jsx
     ├── pages/
+    │   ├── Home.jsx
+    │   ├── Login.jsx
+    │   ├── Signup.jsx
+    │   └── Dashboard.jsx
     ├── services/
-    ├── App.jsx
-    └── main.jsx
+    │   └── auth.service.js
+    ├── lib/
+    │   └── axios.js
+    └── App.jsx
+
 ```
 
 ## Pages
@@ -334,6 +340,37 @@ JWT Cookie
         │
         ▼
 Navigate → Dashboard
+```
+
+---
+
+
+# Frontend Authentication Flow
+
+```text
+Login Form
+      │
+      ▼
+Auth Service
+      │
+      ▼
+Shared Axios Client
+      │
+      ▼
+Backend API
+      │
+      ▼
+HttpOnly Cookie
+      │
+      ▼
+Dashboard
+      │
+      ▼
+GET /api/v1/auth/me
+      │
+      ▼
+Authenticated User
+
 ```
 
 ---

@@ -12,4 +12,12 @@ async function signup(signupData){
     return response.data;
 }
 
-export {login, signup};
+
+
+async function getCurrentUser(){
+    const response = await api.get("/auth/me");
+
+    return response.data;
+}
+
+export {login, signup, getCurrentUser};
