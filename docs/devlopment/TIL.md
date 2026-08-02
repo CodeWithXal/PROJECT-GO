@@ -890,15 +890,50 @@ instead of storing the entire API response object.
 
 ## 2026-08-02
 
-## Axios Response Interceptors
+# Authentication Architecture
 
-I learned that Axios interceptors allow requests and responses to be processed globally.
+### Axios Response Interceptors
 
-A response interceptor is useful for handling authentication failures because every API response passes through it before reaching the calling component.
+- Learned how Axios response interceptors process every API response globally.
+- Used a centralized interceptor to detect `401 Unauthorized` responses.
+- Learned why authentication errors should be handled in one place instead of every component (DRY Principle).
+- Understood that successful responses should be returned unchanged while errors should be propagated using `Promise.reject(error)`.
 
-Using a centralized interceptor follows the DRY principle by avoiding repeated authentication checks throughout the application.
+### React Context
 
-I also learned that successful responses should be returned unchanged, while errors should still be propagated using `Promise.reject(error)` after any global handling is performed.
+- Learned how `createContext()` creates a shared state container for the application.
+- Implemented `AuthProvider` to fetch the authenticated user once during application startup.
+- Learned that React Context acts as a single source of truth for authentication state.
+- Eliminated duplicate `/auth/me` API requests across multiple components.
+
+### Custom Hooks
+
+- Created a reusable `useAuth` custom hook.
+- Learned how custom hooks simplify access to React Context by hiding `useContext()` implementation details.
+- Improved component readability by consuming authentication state through a single hook.
+
+### Protected Routes
+
+- Implemented a reusable `ProtectedRoute` component.
+- Learned how route protection should belong to the routing layer rather than individual pages.
+- Understood why `ProtectedRoute` wraps the `element` prop instead of wrapping `<Route>` components.
+- Learned how the `children` prop allows wrapper components to render protected pages.
+
+### Dashboard Refactoring
+
+- Refactored `Dashboard` to consume authentication state from `AuthContext`.
+- Removed direct authentication API requests from the page.
+- Separated authentication logic from UI rendering.
+
+### Key Engineering Concepts
+
+- Separation of Concerns
+- Single Responsibility Principle (SRP)
+- DRY (Don't Repeat Yourself)
+- Centralized State Management
+- Global Authentication Architecture
+- Route Protection using React Router
+- Reusable Components with `children`
 
 
 

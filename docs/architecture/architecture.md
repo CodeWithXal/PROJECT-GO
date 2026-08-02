@@ -318,66 +318,60 @@ Responsibilities:
 
 ---
 
-# Frontend Login Flow
-
-```text
-LoginForm
-        │
-        ▼
-auth.service.js
-        │
-        ▼
-Axios Instance
-        │
-        ▼
-POST /api/v1/auth/login
-        │
-        ▼
-Backend
-        │
-        ▼
-JWT Cookie
-        │
-        ▼
-Navigate → Dashboard
-```
-
----
-
-
 # Frontend Authentication Flow
 
 ```text
-Login Form
-      │
-      ▼
-Auth Service
-      │
-      ▼
-Shared Axios Client
-      │
-      ▼
-Axios Response Interceptor
-      │
-      ▼
-Backend API
-      │
-      ▼
-HttpOnly Cookie
-      │
-      ▼
-Dashboard
-      │
-      ▼
+Application Starts
+        │
+        ▼
+AuthProvider
+        │
+        ▼
 GET /api/v1/auth/me
-      │
-      ▼
+        │
+        ▼
+Auth Service
+        │
+        ▼
+Shared Axios Client
+        │
+        ▼
+Axios Response Interceptor
+        │
+        ▼
+Backend API
+        │
+        ▼
 Authenticated User
-
+        │
+        ▼
+AuthContext
+        │
+        ▼
+useAuth()
+        │
+        ▼
+ProtectedRoute
+        │
+        ▼
+Protected Pages (Dashboard)
 ```
 
 ---
 
+## Authentication Architecture
+
+Authentication state is managed globally using React Context.
+
+Responsibilities:
+
+- Initialize the authenticated user on application startup.
+- Store the authenticated user in a centralized context.
+- Expose authentication state through the `useAuth` custom hook.
+- Prevent duplicate authentication requests across pages.
+- Provide authentication state to protected routes and components.
+
+---
 
 ## Axios Response Interceptor
 
@@ -385,18 +379,18 @@ All API requests pass through a centralized Axios response interceptor.
 
 Responsibilities:
 
-- Pass successful responses to the calling component.
+- Pass successful responses back to the calling service.
 - Detect `401 Unauthorized` responses.
 - Redirect unauthenticated users to the login page.
-- Propagate errors back to the calling component using `Promise.reject()`.
+- Propagate errors using `Promise.reject()`.
 
 ### Session Expiration Flow
 
 ```text
-Dashboard
+Protected Page
       │
       ▼
-GET /api/v1/auth/me
+API Request
       │
       ▼
 401 Unauthorized
@@ -406,11 +400,37 @@ Axios Response Interceptor
       │
       ▼
 Redirect to /login
-
 ```
 
 ---
 
+## Protected Route Flow
+
+```text
+User Visits Protected Route
+          │
+          ▼
+ProtectedRoute
+          │
+          ▼
+isLoading?
+     │
+ ┌───┴────┐
+ │        │
+Yes       No
+ │         │
+ ▼         ▼
+Loading  isAuthenticated?
+              │
+         ┌────┴────┐
+         │         │
+        Yes       No
+         │         │
+         ▼         ▼
+ Render Page   Redirect to /login
+```
+
+---
 
 # Design Principles
 
@@ -419,6 +439,9 @@ PROJECT GO currently follows:
 - Separation of Concerns
 - Layered Architecture
 - MVC Pattern
+- React Context for Global State
+- Custom Hooks
+- Protected Routing
 - Reusable Components
 - Service Layer
 - Shared Axios Client
@@ -433,10 +456,9 @@ PROJECT GO currently follows:
 Planned additions:
 
 - Authorization (Roles & Permissions)
-- Refresh Tokens
-- Global Authentication Context
-- Route Protection
-- Centralized Error Handling
+- Refresh Token Support
+- Automatic Token Refresh
+- Global Error Handling
 - File Uploads
 - Project & Task Modules
 - Real-time Features (if required)

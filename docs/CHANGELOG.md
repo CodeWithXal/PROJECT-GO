@@ -156,11 +156,19 @@
   Login Form → Auth Service → Axios → Backend.
 
 
-  ## 2026-08-02
+## 2026-08-02
 
-  ### Added
-- Axios response interceptor for centralized authentication handling.
-- Automatic redirect to the login page when the server returns `401 Unauthorized`.
+### Added
+
+- Added an Axios response interceptor for centralized authentication and error handling.
+- Implemented automatic redirection to the login page on `401 Unauthorized` responses.
+- Created `AuthContext` to provide global authentication state across the application.
+- Added `AuthProvider` to initialize and manage the authenticated user session.
+- Created a reusable `useAuth` custom hook for simplified access to authentication state.
+- Implemented `ProtectedRoute` to restrict access to authenticated routes.
 
 ### Changed
-- Authentication errors are now handled globally instead of individually in components.
+
+- Centralized authentication state management using React Context.
+- Refactored the Dashboard to consume authentication state from `AuthContext` instead of making direct API requests.
+- Moved authentication and route protection logic out of individual components, improving separation of concerns and reducing code duplication.
