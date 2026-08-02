@@ -888,6 +888,18 @@ instead of storing the entire API response object.
 
 ---
 
-#### Next Learning Goal
+## 2026-08-02
 
-Implement Axios response interceptors to automatically handle expired sessions (`401 Unauthorized`) by redirecting unauthenticated users to the login page.
+## Axios Response Interceptors
+
+I learned that Axios interceptors allow requests and responses to be processed globally.
+
+A response interceptor is useful for handling authentication failures because every API response passes through it before reaching the calling component.
+
+Using a centralized interceptor follows the DRY principle by avoiding repeated authentication checks throughout the application.
+
+I also learned that successful responses should be returned unchanged, while errors should still be propagated using `Promise.reject(error)` after any global handling is performed.
+
+
+
+

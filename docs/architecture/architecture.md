@@ -357,6 +357,9 @@ Auth Service
 Shared Axios Client
       │
       ▼
+Axios Response Interceptor
+      │
+      ▼
 Backend API
       │
       ▼
@@ -374,6 +377,40 @@ Authenticated User
 ```
 
 ---
+
+
+## Axios Response Interceptor
+
+All API requests pass through a centralized Axios response interceptor.
+
+Responsibilities:
+
+- Pass successful responses to the calling component.
+- Detect `401 Unauthorized` responses.
+- Redirect unauthenticated users to the login page.
+- Propagate errors back to the calling component using `Promise.reject()`.
+
+### Session Expiration Flow
+
+```text
+Dashboard
+      │
+      ▼
+GET /api/v1/auth/me
+      │
+      ▼
+401 Unauthorized
+      │
+      ▼
+Axios Response Interceptor
+      │
+      ▼
+Redirect to /login
+
+```
+
+---
+
 
 # Design Principles
 

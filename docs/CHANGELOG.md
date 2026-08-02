@@ -154,3 +154,13 @@
 - API requests now use a centralized Axios client.
 - Authentication flow now follows:
   Login Form → Auth Service → Axios → Backend.
+
+
+  ## 2026-08-02
+
+  ### Added
+- Axios response interceptor for centralized authentication handling.
+- Automatic redirect to the login page when the server returns `401 Unauthorized`.
+
+### Changed
+- Authentication errors are now handled globally instead of individually in components.
