@@ -937,4 +937,16 @@ instead of storing the entire API response object.
 
 
 
+### 2026-08-04 — Cookie Invalidation & Idempotency
 
+**Cookie Mechanics**
+- The server cannot delete a file from the user's browser.
+- To "delete" a cookie, the server sends a new `Set-Cookie` header with the exact same name, but with an expiration date in the past.
+- The `res.clearCookie()` options (path, domain, secure, sameSite) MUST exactly match the options used to create the cookie, otherwise the browser will ignore the command.
+
+**Express Mechanics**
+- `res.clearCookie()` is synchronous. It does not return a Promise. It simply attaches a header to the response object in Node's memory. The header is only sent when `res.json()` or `res.send()` is called.
+
+**Idempotent API Design**
+- The logout route does not verify the token first. 
+- Calling logout 10 times in a row should return 200 OK every time. The goal is simply "ensure the user has no active token."

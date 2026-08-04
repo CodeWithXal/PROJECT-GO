@@ -172,3 +172,8 @@
 - Centralized authentication state management using React Context.
 - Refactored the Dashboard to consume authentication state from `AuthContext` instead of making direct API requests.
 - Moved authentication and route protection logic out of individual components, improving separation of concerns and reducing code duplication.
+
+## 2026-08-04
+
+### Added
+- Backend logout endpoint (`POST /api/v1/auth/logout`) to securely invalidate HttpOnly cookies.

@@ -40,7 +40,6 @@ async function login(req, res){
         const {email, password} = req.validatedData;
         const user = await User.findOne({email})
         if(!user){
-            console.log("user not found");
             return(
                 res.status(401).json({
                 "success": false,
@@ -83,8 +82,37 @@ async function login(req, res){
     }
     catch(error){
         console.error(error);
+        res.statur(500).json({
+            "success": false,
+            "message": "Login failed"
+        })
     }
 
+    
+}
+
+
+function logout(req, res) {
+
+    try{
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax"
+        });
+
+        res.status(200).json({
+            "success": true,
+            "message": "Logged out successfully"
+        }); 
+    }
+    catch(error){
+        console.error("Logout error :",error);
+        res.status(500).json({
+            "success": false,
+            "message": "Logout unsuccessful"
+        })
+    }
     
 }
 
@@ -120,4 +148,4 @@ async function getCurrentUser(req, res){
 
 
 
-export {signup, login, getCurrentUser};
+export {signup, login, logout, getCurrentUser};

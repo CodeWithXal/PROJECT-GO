@@ -1,3 +1,6 @@
+Here is the complete, updated `api.md` file in one single block so you can easily copy and paste it.
+
+```markdown
 # PROJECT GO API Documentation
 
 ---
@@ -8,12 +11,14 @@ Development
 
 ```text
 http://localhost:5000
+
 ```
 
 Base API Route
 
 ```text
 /api/v1
+
 ```
 
 ---
@@ -38,6 +43,7 @@ Checks whether the backend server is running.
 {
   "message": "server is running"
 }
+
 ```
 
 ---
@@ -58,14 +64,15 @@ Creates a new user account.
   "email": "string",
   "password": "string"
 }
+
 ```
 
 ### Process
 
-- Validate request
-- Hash password using bcrypt
-- Create user
-- Store user in MongoDB
+* Validate request
+* Hash password using bcrypt
+* Create user
+* Store user in MongoDB
 
 ### Success Response
 
@@ -80,6 +87,7 @@ Creates a new user account.
     "email": "string"
   }
 }
+
 ```
 
 ### Error Responses
@@ -111,16 +119,17 @@ Authenticates an existing user.
   "email": "string",
   "password": "string"
 }
+
 ```
 
 ### Process
 
-- Validate request
-- Find user by email
-- Compare password using bcrypt
-- Generate JWT
-- Set HttpOnly cookie
-- Return authenticated user
+* Validate request
+* Find user by email
+* Compare password using bcrypt
+* Generate JWT
+* Set HttpOnly cookie
+* Return authenticated user
 
 ### Success Response
 
@@ -131,6 +140,7 @@ Authenticates an existing user.
   "success": true,
   "message": "Login successful"
 }
+
 ```
 
 ### Error Responses
@@ -146,6 +156,7 @@ Validation failed.
   "success": false,
   "message": "Invalid email or password"
 }
+
 ```
 
 ---
@@ -162,11 +173,11 @@ Requires a valid HttpOnly JWT cookie.
 
 ### Process
 
-- Read JWT cookie
-- Verify JWT
-- Attach decoded user to `req.user`
-- Fetch user from MongoDB
-- Return user without password
+* Read JWT cookie
+* Verify JWT
+* Attach decoded user to `req.user`
+* Fetch user from MongoDB
+* Return user without password
 
 ### Success Response
 
@@ -182,6 +193,7 @@ Requires a valid HttpOnly JWT cookie.
     "email": "..."
   }
 }
+
 ```
 
 ### Error Responses
@@ -197,17 +209,47 @@ Authentication required.
   "success": false,
   "message": "User not found"
 }
+
 ```
 
 ---
 
-# Authentication
+## POST `/api/v1/auth/logout`
+
+### Description
+
+Logs out the currently authenticated user by destroying their HttpOnly cookie.
+
+### Authentication
+
+Does not require authentication (Idempotent).
+
+### Process
+
+* Overwrite existing `token` cookie with an expired date (`Max-Age=0`).
+* Return success message.
+
+### Success Response
+
+**Status:** `200 OK`
+
+```json
+{
+  "success": true,
+  "message": "Logged out successfully"
+}
+
+```
+
+---
+
+# Authentication Configuration
 
 Authentication uses:
 
-- JWT (JSON Web Token)
-- HttpOnly Cookies
-- Cookie-based session persistence
+* JWT (JSON Web Token)
+* HttpOnly Cookies
+* Cookie-based session persistence
 
 Clients should send requests with credentials enabled.
 
@@ -220,34 +262,35 @@ Used by the Dashboard page to retrieve the currently authenticated user using th
 # Current API Summary
 
 | Method | Endpoint | Description |
-|---------|----------|-------------|
+| --- | --- | --- |
 | GET | `/api/v1/health` | Health check |
 | POST | `/api/v1/auth/signup` | Register a new user |
 | POST | `/api/v1/auth/login` | Authenticate user |
 | GET | `/api/v1/auth/me` | Get current authenticated user |
+| POST | `/api/v1/auth/logout` | Logout user by destroying HttpOnly cookie |
 
 ---
 
 # Planned Endpoints
 
-## Authentication
-
-- POST `/api/v1/auth/logout`
-
 ## Users
 
-- PATCH `/api/v1/users/profile`
-- DELETE `/api/v1/users`
+* PATCH `/api/v1/users/profile`
+* DELETE `/api/v1/users`
 
 ## Projects
 
-- CRUD operations
+* CRUD operations
 
 ## Tasks
 
-- CRUD operations
+* CRUD operations
 
 ## Collaboration
 
-- Team management
-- Project sharing
+* Team management
+* Project sharing
+
+```
+
+```
