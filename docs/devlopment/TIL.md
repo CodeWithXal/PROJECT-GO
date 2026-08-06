@@ -950,3 +950,87 @@ instead of storing the entire API response object.
 **Idempotent API Design**
 - The logout route does not verify the token first. 
 - Calling logout 10 times in a row should return 200 OK every time. The goal is simply "ensure the user has no active token."
+
+
+
+### 2026-08-06
+
+
+## Authentication Flow
+
+### Error Propagation
+
+- Async functions naturally propagate errors.
+- If `fetchUser()` throws an error:
+  - `login()` also throws.
+  - The calling component (`LoginForm`) can handle it.
+- This avoids unnecessary try/catch blocks in every function.
+
+---
+
+### Separation of Responsibilities
+
+Backend responsibilities:
+- Validate requests.
+- Authenticate users.
+- Return structured responses.
+
+Frontend responsibilities:
+- Display errors.
+- Show loading states.
+- Show toast notifications.
+- Navigate users.
+
+---
+
+### Authentication Flow
+
+Successful login flow:
+
+1. User submits credentials.
+2. Frontend calls `login()`.
+3. Backend validates credentials.
+4. JWT cookie is created.
+5. Frontend requests `/auth/me`.
+6. User information is stored inside `AuthContext`.
+7. UI updates automatically.
+
+---
+
+### Logout Flow
+
+1. User clicks Logout.
+2. Frontend calls logout endpoint.
+3. Backend clears authentication cookie.
+4. Frontend clears authenticated user.
+5. User is redirected to Login page.
+
+---
+
+### Validation vs Authentication
+
+Validation errors:
+- Invalid request format.
+- Missing fields.
+- Invalid email format.
+- Weak password.
+
+Authentication errors:
+- Wrong email.
+- Wrong password.
+
+These are different responsibilities and should return different responses.
+
+---
+
+### React Context
+
+React Context should manage authentication state instead of individual pages.
+
+Components consume authentication through:
+
+- user
+- isAuthenticated
+- isLoading
+- login()
+- logout()

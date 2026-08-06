@@ -58,8 +58,8 @@
 
 ## Frontend
 
-* ⬜ Context `login()`
-* ⬜ Context `logout()`
+* ✅ Context `login()`
+* ✅ Context `logout()`
 * ⬜ Context `refreshUser()`
 * ⬜ Navbar
 * ⬜ Conditional navigation

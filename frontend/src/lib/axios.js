@@ -15,13 +15,6 @@ api.interceptors.response.use(
         return response
     },
     (error) => {
-        // handle invalid or expired tokens
-        if(
-            error.response?.status === 401 &&
-            error.config?.url !== "/auth/login"
-        ) {
-            window.location.href = "/login";
-        }
 
         // let the component handle error as well
         return Promise.reject(error);

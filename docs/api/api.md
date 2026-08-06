@@ -159,6 +159,28 @@ Validation failed.
 
 ```
 
+
+
+Also update the Login endpoint.
+
+```md
+### Login Flow
+
+1. Validate request body.
+2. Verify email.
+3. Verify password.
+4. Generate JWT.
+5. Store JWT in HttpOnly cookie.
+6. Return success response.
+
+Frontend immediately calls:
+
+GET /api/v1/auth/me
+
+to synchronize authenticated user data.
+
+
+
 ---
 
 ## GET `/api/v1/auth/me`

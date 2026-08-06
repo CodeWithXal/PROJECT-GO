@@ -430,6 +430,53 @@ Loading  isAuthenticated?
  Render Page   Redirect to /login
 ```
 
+
+---
+
+## Authentication State Flow
+
+Authentication state is managed globally using React Context.
+
+Login sequence:
+
+LoginForm
+    ↓
+AuthContext.login()
+    ↓
+loginService()
+    ↓
+POST /auth/login
+    ↓
+JWT Cookie Created
+    ↓
+fetchUser()
+    ↓
+GET /auth/me
+    ↓
+setUser()
+    ↓
+React re-renders
+
+---
+
+
+## Logout flow
+
+
+Dashboard
+    ↓
+AuthContext.logout()
+    ↓
+POST /auth/logout
+    ↓
+Cookie Cleared
+    ↓
+setUser(null)
+    ↓
+ProtectedRoute
+    ↓
+Redirect to Login
+
 ---
 
 # Design Principles

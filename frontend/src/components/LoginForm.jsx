@@ -1,11 +1,13 @@
 import {useState} from "react";
-import { login } from "../services/auth.service";
+import useAuth from "../hooks/useAuth.js";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 
 function LoginForm(){
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
+    const { login } = useAuth();
+    const [credentials, setCredentials] = useState({
     email: "",
     password: ""
     });
@@ -14,8 +16,8 @@ function LoginForm(){
     const [error, setError] = useState("");
 
     function handleChange(event){
-        
-        setFormData((prev) => ({
+        console.log(event.target.name, event.target.value);
+        setCredentials((prev) => ({
             ...prev,
             [event.target.name]: event.target.value
         }));
@@ -29,17 +31,34 @@ function LoginForm(){
             event.preventDefault();
             setIsLoading(true);
             setError("")
-
-            const response = await login(formData);
-            if(response.success){
+            
+            console.log(credentials);
+            await login(credentials);
             navigate("/dashboard")
-        }
             
             
         }
-        catch(error){
-            setError(error.message)
-            console.error(error)
+        catch (error) {
+            console.error(error);
+
+            // Backend response
+            const response = error.response?.data;
+
+            if (response?.error) {
+                // Zod validation errors
+                const validationMessage = response.error
+                    .map((issue) => issue.message)
+                    .join("\n");
+
+                setError(validationMessage);
+                toast.error(validationMessage);
+            } else {
+                // Authentication or other backend errors
+                const message = response?.message || "Something went wrong";
+
+                setError(message);
+                toast.error(message);
+            }
         }
         finally{
             setIsLoading(false)
@@ -52,13 +71,19 @@ return(
     <form onSubmit={handleSubmit}>
         <h1>Welcome Back</h1>
 
-        {error && <p>{error}</p>}
+        {error && (
+            <div>
+                {error.split("\n").map((line, index) => (
+                    <p key={index}>{line}</p>
+                ))}
+            </div>
+        )}
 
        <label htmlFor="">Email</label>
        <input 
             type="email" 
             name="email"
-            value={formData.email}
+            value={credentials.email}
             onChange={handleChange}
         />
 
@@ -66,7 +91,7 @@ return(
         <input 
             type="password"
             name="password"
-            value={formData.password}
+            value={credentials.password}
             onChange={handleChange}
         />
 

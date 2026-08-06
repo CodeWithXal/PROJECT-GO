@@ -1,142 +1,261 @@
 # PROJECT GO
 
-PROJECT GO is a full-stack productivity and project management platform being built with production-quality software engineering practices.
+PROJECT GO is a production-grade full-stack productivity and project management platform built to follow real-world software engineering practices.
 
-This repository follows a monorepo architecture containing both the frontend and backend.
+The primary goal of this project is not only to build a scalable application but also to learn software architecture, clean code, backend engineering, frontend engineering, testing, documentation, deployment, and DevOps using industry-standard workflows.
 
 ---
 
-## Tech Stack
+# Tech Stack
 
-### Frontend
+## Frontend
+
 - React
 - Vite
-- JavaScript (TypeScript planned)
+- JavaScript
+- React Router
+- Axios
+- React Hot Toast
 
-### Backend
+> TypeScript migration is planned.
+
+## Backend
+
 - Node.js
 - Express.js
-- MongoDB
+- MongoDB Atlas
+- Mongoose
+- JWT Authentication
+- bcrypt
+- Zod Validation
 
 ---
 
-## Project Structure
+# Project Structure
 
+```
 PROJECT-GO/
+│
 ├── frontend/
+│
 ├── backend/
+│
+├── docs/
+│
 ├── README.md
+│
 └── package.json
+```
 
 ---
 
-## Getting Started
+# Getting Started
 
-### Clone the repository
+## Clone Repository
 
 ```bash
 git clone <repository-url>
 ```
 
-### Backend
+---
+
+## Backend
 
 ```bash
 cd backend
-npm install
-npm run dev
-```
 
-### Frontend
-
-```bash
-cd frontend
 npm install
+
 npm run dev
 ```
 
 ---
 
-# PROJECT GO Documentation
+## Frontend
+
+```bash
+cd frontend
+
+npm install
+
+npm run dev
+```
+
+---
+
+# Documentation
 
 ## Architecture
+
 - ARCHITECTURE.md
 
 ## API
+
 - API.md
 
 ## Development
-- TLD.md
+
+- TIL.md (Today I Learned)
 
 ## Deployment
+
 - DEPLOYMENT-LOG.md
 - ENVIRONMENTS.md
 
 ## Planning
+
 - ROADMAP.md
 - CHANGELOG.md
 - KNOWN-ISSUES.md
 
 ## Architecture Decision Records
+
 - ADR/
 
 ---
 
-## Current Progress
+# Current Progress
+
+## Foundation
 
 - ✅ Monorepo setup
 - ✅ GitHub repository initialized
 - ✅ Express backend configured
 - ✅ MongoDB Atlas connected
-- ✅ Health check endpoint implemented
+- ✅ Health Check endpoint
+
+## User Management
+
 - ✅ User Model
-- ✅ User Creation API
-- ✅ Zod Validation
+- ✅ User Registration API
+- ✅ Duplicate username/email detection
+
+## Validation
+
+- ✅ Zod Schemas
 - ✅ Validation Middleware
-- ✅ Password Hashing (bcrypt)
-- ✅ Password Verification (bcrypt.compare())
-- ✅ JWT Authentication
+- ✅ Request sanitization
+
+## Authentication
+
+- ✅ Password hashing (bcrypt)
+- ✅ Password verification
+- ✅ JWT Access Token generation
 - ✅ HttpOnly Cookie Authentication
+- ✅ Secure Cookie Configuration
+- ✅ Login endpoint
+- ✅ Logout endpoint
+- ✅ Authentication middleware
 - ✅ Protected Routes
+- ✅ Current authenticated user endpoint
+
+## Frontend Authentication
+
+- ✅ Axios API client
+- ✅ Global Axios Response Interceptor
+- ✅ AuthContext
+- ✅ Login Flow
+- ✅ Logout Flow
+- ✅ Protected Routes
+- ✅ Authentication State Management
+- ✅ Current User Synchronization
+- ✅ Loading States
+- ✅ Toast Notifications
 
 ---
 
+# Current Features
 
-## Current Features
+## Backend
 
-- Express backend setup
-- MongoDB Atlas connection
-- Health check endpoint
-- User model using Mongoose
-- Create User API endpoint
-- Zod request validation
-- Reusable validation middleware
-- Duplicate username/email detection
-- bcrypt password hashing
-- Secure password storage
-- JWT Access Token Generation
-- HttpOnly Cookie Authentication
-- Secure Cookie Configuration
-- JWT verification
-- Authentication middleware
-- Protected routes
-- Current authenticated user endpoint
+- Express REST API
+- MongoDB Atlas Integration
+- User Registration
+- User Authentication
+- JWT Authentication
+- HttpOnly Cookie Sessions
+- Authentication Middleware
+- Protected API Routes
+- Current User Endpoint
+- Logout Endpoint
+- Zod Validation
+- bcrypt Password Hashing
 
+## Frontend
+
+- React + Vite
+- Axios Service Layer
+- Global Authentication Context
+- Protected Routing
+- Login Page
+- Dashboard
+- Logout Functionality
+- Toast Notifications
+- Loading Indicators
 
 ---
 
-## API Table
+# API Endpoints
 
 | Method | Endpoint | Description |
 |---------|----------|-------------|
-| GET | /api/v1/health | Health check |
-| POST | /api/v1/users | Create a new user |
-| POST | /api/v1/auth/signup | Register a new user |
-| POST | /api/v1/auth/login | Authenticate user |
-| GET | /api/v1/auth/me | Get authenticated user |
-
+| GET | `/api/v1/health` | Health Check |
+| POST | `/api/v1/users` | Create User |
+| POST | `/api/v1/auth/signup` | Register User |
+| POST | `/api/v1/auth/login` | Login User |
+| POST | `/api/v1/auth/logout` | Logout User |
+| GET | `/api/v1/auth/me` | Get Current Authenticated User |
 
 ---
 
-## License
+# Development Workflow
+
+Every major feature follows the same engineering pipeline:
+
+```
+Learn
+    ↓
+Plan
+    ↓
+Design
+    ↓
+Database
+    ↓
+API
+    ↓
+Backend
+    ↓
+Testing
+    ↓
+Frontend
+    ↓
+Integration
+    ↓
+Refactor
+    ↓
+Documentation
+    ↓
+Git Commit
+    ↓
+Review
+```
+
+---
+
+# Upcoming Milestones
+
+- User Profile Module
+- Project CRUD
+- Task Management
+- Team Workspaces
+- Notifications
+- File Uploads
+- Real-time Collaboration
+- Deployment
+- CI/CD Pipeline
+
+---
+
+# License
 
 MIT

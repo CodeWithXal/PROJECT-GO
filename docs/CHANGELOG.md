@@ -177,3 +177,25 @@
 
 ### Added
 - Backend logout endpoint (`POST /api/v1/auth/logout`) to securely invalidate HttpOnly cookies.
+
+## 2026-08-06
+
+
+## [Unreleased]
+
+### Added
+
+#### Backend
+- Implemented `POST /api/v1/auth/logout` endpoint.
+- Added secure logout using `res.clearCookie()`.
+- Added authenticated `GET /api/v1/auth/me` endpoint.
+
+#### Frontend
+- Added centralized authentication management using `AuthContext`.
+- Implemented global login and logout functions.
+- Added authentication state management.
+- Added protected route support.
+- Added logout loading state (`isLoggingOut`).
+- Added toast notifications for login and logout events.
+- Added frontend handling for backend validation errors.
+- Added automatic user fetching after successful login.

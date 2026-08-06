@@ -1,28 +1,56 @@
 import { createContext, useState, useEffect } from "react";
-import { getCurrentUser } from "../services/auth.service";
+import { getCurrentUser, loginService, logoutService } from "../services/auth.service";
+import { toast } from "react-hot-toast"
 
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
+    const[isLoggingOut, setIsLoggingOut] = useState(false)
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    useEffect( () => {
-        async function fetchUser(){
-            try{
+
+    async function fetchUser(){
                 const currentUser = await getCurrentUser();
                 setUser(currentUser.data);
-            }
-            catch(error){
+    }
+
+    useEffect(() => {
+        async function initializeAuth() {
+            try {
+                await fetchUser();
+            } catch (error) {
                 console.error(error);
-            }
-            finally{
-                    setIsLoading(false)
+            } finally {
+                setIsLoading(false);
             }
         }
 
-        fetchUser();
+        initializeAuth();
+    }, []);
 
-    },[]);
+    async function login(credentials){   
+                await loginService(credentials);
+                await fetchUser();
+                toast.success("Login Successful");
+    }
+
+    async function logout() {
+        try{
+            setIsLoggingOut(true);
+            await logoutService();
+            setUser(null);
+            toast.success("Logged out successfully");
+        }
+        catch(error){
+            console.error("Logout Error :", error);
+            toast.error("Logout failed");
+            throw error;
+        }
+        finally{
+            setIsLoggingOut(false);
+        }
+    }
+
 
     const isAuthenticated = user !== null;
 
@@ -32,6 +60,9 @@ function AuthProvider({ children }) {
                 user,
                 isAuthenticated,
                 isLoading,
+                isLoggingOut,
+                logout,
+                login
             }}
         >
             {children}
