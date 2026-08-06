@@ -62,9 +62,9 @@
 * ✅ Context `logout()`
 * ⬜ Context `refreshUser()`
 * ⬜ Navbar
-* ⬜ Conditional navigation
-* ⬜ Logout button
-* ⬜ Remember authenticated user
+* ✅ Conditional navigation
+* ✅ Logout button
+* ✅ Remember authenticated user
 * ⬜ Loading screens
 * ⬜ Error pages
 
