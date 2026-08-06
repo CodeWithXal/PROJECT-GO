@@ -52,7 +52,7 @@
 ## Backend
 
 * ✅ Logout endpoint
-* ⬜ Refresh token strategy (optional)
+* ⬜ Refresh token strategy
 * ⬜ Cookie cleanup
 * ⬜ Better auth error handling
 
