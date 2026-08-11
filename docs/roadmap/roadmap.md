@@ -51,22 +51,30 @@
 
 ## Backend
 
-* ✅ Logout endpoint
-* ⬜ Refresh token strategy
-* ⬜ Cookie cleanup
-* ⬜ Better auth error handling
+- ✅ Signup endpoint
+- ✅ Login endpoint
+- ✅ Logout endpoint
+- ⬜ Refresh token strategy
+- ✅ Cookie cleanup
+- ⬜ Better auth error handling
+- ✅ Request validation with Zod
+- ✅ Validation error responses
+- ✅ Duplicate username/email error handling
 
 ## Frontend
 
-* ✅ Context `login()`
-* ✅ Context `logout()`
-* ⬜ Context `refreshUser()`
-* ⬜ Navbar
-* ✅ Conditional navigation
-* ✅ Logout button
-* ✅ Remember authenticated user
-* ⬜ Loading screens
-* ⬜ Error pages
+- ✅ Signup page
+- ✅ Login page
+- ✅ Context `signup()`
+- ✅ Context `login()`
+- ✅ Context `logout()`
+- ⬜ Context `refreshUser()`
+- ⬜ Navbar
+- ✅ Conditional navigation
+- ✅ Logout button
+- ✅ Remember authenticated user
+- ⬜ Loading screens
+- ⬜ Error pages
 
 ---
 

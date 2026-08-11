@@ -23,12 +23,28 @@ async function signup(req,res){
         })
 
     }
-    catch(error){
+    catch (error) {
         console.error(error);
-        res.status(500).json({
-            "success": false,
-            "message": "something went wrong",
-            "error": error.message
+
+        if (error.code === 11000) {
+            if (error.keyPattern?.username) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Username already exists"
+                });
+            }
+
+            if (error.keyPattern?.email) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Email already exists"
+                });
+            }
+        }
+
+        return res.status(500).json({
+            success: false,
+            message: "Something went wrong"
         });
     }
 

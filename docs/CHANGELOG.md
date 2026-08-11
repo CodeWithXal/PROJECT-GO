@@ -199,3 +199,67 @@
 - Added toast notifications for login and logout events.
 - Added frontend handling for backend validation errors.
 - Added automatic user fetching after successful login.
+
+
+### Improved
+
+- Authentication logic is now separated between:
+  - UI components
+  - `AuthContext`
+  - Authentication services
+  - Backend controllers
+- Dashboard now consumes authentication state through `AuthContext`.
+- Authentication errors are propagated from services through the context to the UI.
+
+### Tested
+
+- Login flow.
+- Logout flow.
+- Authentication persistence after page refresh.
+- Protected routes.
+- Invalid login credentials.
+- Backend logout endpoint.
+
+---
+
+
+## 2026-08-11
+
+### Added
+
+#### Frontend Signup
+
+- Added signup page.
+- Added `SignupForm` component.
+- Added controlled username, email, and password inputs.
+- Added `signupService()` to the authentication service.
+- Added centralized `signup()` function to `AuthContext`.
+- Added signup loading state.
+- Added redirect to the login page after successful signup.
+
+### Improved
+
+- Added user-friendly display of Zod validation errors returned by the backend.
+- Validation errors are now displayed individually instead of only showing `"validation failed"`.
+- Added backend error handling for signup failures.
+- Added duplicate username error handling.
+- Added duplicate email error handling.
+- Added signup success and failure toast notifications.
+- Added protection against rapid repeated signup submissions using a `useRef` submission guard.
+- Signup button is disabled while a signup request is in progress.
+
+### Tested
+
+- Successful signup.
+- Empty signup fields.
+- Invalid username.
+- Invalid email.
+- Invalid password.
+- Duplicate username.
+- Duplicate email.
+- Backend unavailable during signup.
+- Rapid repeated signup button clicks.
+- Successful redirect from signup to login.
+- Signup validation error handling.
+- Signup toast notifications.
+- CORS preflight behavior.

@@ -116,95 +116,104 @@ npm run dev
 
 # Current Progress
 
-## Foundation
+### Foundation
 
 - ✅ Monorepo setup
 - ✅ GitHub repository initialized
 - ✅ Express backend configured
 - ✅ MongoDB Atlas connected
-- ✅ Health Check endpoint
-
-## User Management
-
+- ✅ Health check endpoint implemented
 - ✅ User Model
-- ✅ User Registration API
-- ✅ Duplicate username/email detection
+- ✅ User Creation API
 
-## Validation
+### Validation & Security
 
-- ✅ Zod Schemas
-- ✅ Validation Middleware
-- ✅ Request sanitization
+- ✅ Zod request validation
+- ✅ Reusable validation middleware
+- ✅ Validation error responses
+- ✅ Duplicate username/email handling
+- ✅ Password hashing with bcrypt
+- ✅ Password verification with bcrypt.compare()
+- ✅ JWT access token generation
+- ✅ JWT authentication middleware
+- ✅ HttpOnly cookie authentication
+- ✅ Secure cookie configuration
 
-## Authentication
+### Authentication
 
-- ✅ Password hashing (bcrypt)
-- ✅ Password verification
-- ✅ JWT Access Token generation
-- ✅ HttpOnly Cookie Authentication
-- ✅ Secure Cookie Configuration
+- ✅ Signup endpoint
 - ✅ Login endpoint
 - ✅ Logout endpoint
-- ✅ Authentication middleware
-- ✅ Protected Routes
 - ✅ Current authenticated user endpoint
-
-## Frontend Authentication
-
-- ✅ Axios API client
-- ✅ Global Axios Response Interceptor
-- ✅ AuthContext
-- ✅ Login Flow
-- ✅ Logout Flow
-- ✅ Protected Routes
-- ✅ Authentication State Management
-- ✅ Current User Synchronization
-- ✅ Loading States
-- ✅ Toast Notifications
-
+- ✅ Protected routes
+- ✅ React AuthContext
+- ✅ Global authentication state
+- ✅ Login flow
+- ✅ Signup flow
+- ✅ Logout flow
+- ✅ Authentication persistence across page refreshes
+- ✅ Loading states
+- ✅ Authentication error handling
+- ✅ Toast notifications
+- ✅ Duplicate form submission protection
 ---
 
 # Current Features
 
-## Backend
+### Backend
 
-- Express REST API
-- MongoDB Atlas Integration
-- User Registration
-- User Authentication
-- JWT Authentication
-- HttpOnly Cookie Sessions
-- Authentication Middleware
-- Protected API Routes
-- Current User Endpoint
-- Logout Endpoint
-- Zod Validation
-- bcrypt Password Hashing
+- Express backend
+- MongoDB Atlas
+- Health check endpoint
+- User model using Mongoose
+- User creation API
+- Signup API
+- Login API
+- Logout API
+- Current authenticated user API
+- Zod request validation
+- Reusable validation middleware
+- Structured validation error responses
+- Duplicate username/email detection
+- bcrypt password hashing
+- Secure password storage
+- JWT access token generation
+- JWT verification
+- Authentication middleware
+- HttpOnly cookie authentication
+- Secure cookie configuration
+- Protected routes
 
-## Frontend
+### Frontend
 
-- React + Vite
-- Axios Service Layer
-- Global Authentication Context
-- Protected Routing
-- Login Page
-- Dashboard
-- Logout Functionality
-- Toast Notifications
-- Loading Indicators
+- React + Vite frontend
+- Axios API client
+- Authentication Context
+- Global authentication state
+- Login form
+- Signup form
+- Logout functionality
+- Protected route handling
+- Authentication persistence
+- Loading states
+- Form submission states
+- Toast notifications
+- Validation error display
+- Authentication error handling
+- Duplicate submission protection
 
 ---
 
-# API Endpoints
+# API Table
 
 | Method | Endpoint | Description |
 |---------|----------|-------------|
-| GET | `/api/v1/health` | Health Check |
-| POST | `/api/v1/users` | Create User |
-| POST | `/api/v1/auth/signup` | Register User |
-| POST | `/api/v1/auth/login` | Login User |
-| POST | `/api/v1/auth/logout` | Logout User |
-| GET | `/api/v1/auth/me` | Get Current Authenticated User |
+| GET | /api/v1/health | Health check |
+| POST | /api/v1/users | Create a new user |
+| POST | /api/v1/auth/signup | Register a new user |
+| POST | /api/v1/auth/login | Authenticate a user |
+| POST | /api/v1/auth/logout | Log out the current user |
+| GET | /api/v1/auth/me | Get the currently authenticated user |
 
 ---
 

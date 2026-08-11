@@ -6,7 +6,7 @@ async function loginService(credentials){
     return response.data;
 }
 
-async function signup(credentials){
+async function signupService(credentials){
     const response = await api.post("/auth/signup", credentials);
 
     return response.data;
@@ -24,4 +24,4 @@ async function getCurrentUser(){
     return response.data;
 }
 
-export {loginService, signup, logoutService, getCurrentUser};
+export {loginService, signupService, logoutService, getCurrentUser};

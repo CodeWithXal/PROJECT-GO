@@ -479,6 +479,76 @@ Redirect to Login
 
 ---
 
+
+# Signup Architecture
+
+Signup follows the same layered architecture as the login flow.
+
+```text
+SignupForm
+    │
+    ▼
+AuthContext.signup()
+    │
+    ▼
+signupService()
+    │
+    ▼
+POST /api/v1/auth/signup
+    │
+    ▼
+Validation Middleware
+    │
+    ▼
+Signup Controller
+    │
+    ▼
+bcrypt Password Hashing
+    │
+    ▼
+MongoDB
+    │
+    ▼
+JSON Response
+
+```
+
+
+## Signup Validation Error Flow
+
+SignupForm
+    │
+    ▼
+AuthContext.signup()
+    │
+    ▼
+signupService()
+    │
+    ▼
+Backend
+    │
+    ▼
+Zod Validation
+    │
+    ├── Valid ───────────────► Signup Controller
+    │
+    └── Invalid
+            │
+            ▼
+        400 Response
+            │
+            ▼
+        SignupForm
+            │
+            ▼
+    Extract validation issues
+            │
+            ▼
+    Display individual messages
+
+
+---
+
 # Design Principles
 
 PROJECT GO currently follows:

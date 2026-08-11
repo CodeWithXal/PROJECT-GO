@@ -64,15 +64,14 @@ Creates a new user account.
   "email": "string",
   "password": "string"
 }
-
 ```
 
 ### Process
 
-* Validate request
-* Hash password using bcrypt
-* Create user
-* Store user in MongoDB
+- Validate request using Zod
+- Hash password using bcrypt
+- Create user
+- Store user in MongoDB
 
 ### Success Response
 
@@ -87,7 +86,6 @@ Creates a new user account.
     "email": "string"
   }
 }
-
 ```
 
 ### Error Responses
@@ -96,13 +94,93 @@ Creates a new user account.
 
 Validation failed.
 
-**409 Conflict**
+Example:
 
-User already exists.
+```json
+{
+  "success": false,
+  "message": "validation failed",
+  "error": [
+    {
+      "path": ["email"],
+      "message": "Invalid email format"
+    },
+    {
+      "path": ["password"],
+      "message": "Password must be at least 8 characters"
+    }
+  ]
+}
+```
+
+The `error` array contains the individual Zod validation errors.
+
+The frontend extracts and displays these validation messages to the user.
 
 **500 Internal Server Error**
 
-Unexpected server error.
+Backend or database error.
+
+Example:
+
+```json
+{
+  "success": false,
+  "message": "Username already exists",
+  "error": "Username already exists"
+}
+```
+
+or:
+
+```json
+{
+  "success": false,
+  "message": "Email already exists",
+  "error": "Email already exists"
+}
+```
+
+### Frontend Signup Flow
+
+The frontend signup flow follows the authentication service architecture:
+
+```text
+SignupForm
+    │
+    ▼
+AuthContext.signup()
+    │
+    ▼
+signupService()
+    │
+    ▼
+POST /api/v1/auth/signup
+    │
+    ▼
+Backend
+    │
+    ▼
+Success
+    │
+    ▼
+Navigate to /login
+```
+
+### Duplicate Submission Protection
+
+The SignupForm prevents multiple signup requests from being submitted while a signup request is already in progress.
+
+The submit button is disabled while the request is being processed, and a `useRef` flag prevents rapid repeated submissions.
+
+### Frontend Error Handling
+
+Validation errors returned in the `error` array are extracted and displayed individually.
+
+Other backend errors use the `message` field from the response.
+
+Both errors are displayed to the user and shown through toast notifications.
+
 
 ---
 

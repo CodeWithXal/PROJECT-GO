@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { getCurrentUser, loginService, logoutService } from "../services/auth.service";
+import { getCurrentUser, signupService, loginService, logoutService } from "../services/auth.service";
 import { toast } from "react-hot-toast"
 
 const AuthContext = createContext();
@@ -34,6 +34,11 @@ function AuthProvider({ children }) {
                 toast.success("Login Successful");
     }
 
+    async function signup(credentials){
+        await signupService(credentials);
+        toast.success("Signup Successful")
+    }
+
     async function logout() {
         try{
             setIsLoggingOut(true);
@@ -62,7 +67,8 @@ function AuthProvider({ children }) {
                 isLoading,
                 isLoggingOut,
                 logout,
-                login
+                login,
+                signup
             }}
         >
             {children}
