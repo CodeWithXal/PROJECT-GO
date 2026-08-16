@@ -263,3 +263,23 @@
 - Signup validation error handling.
 - Signup toast notifications.
 - CORS preflight behavior.
+
+
+---
+
+
+## 2026-08-16
+
+### Changed
+
+- Replaced the `fetchUser()` function in `AuthContext` with `refreshUser()`.
+- Centralized authenticated-user synchronization through `refreshUser()`.
+- Updated authentication initialization to use `refreshUser()`.
+- Updated the login flow to call `refreshUser()` after successful authentication.
+- Exposed `refreshUser()` through `AuthContext` for reuse by other authentication-related components and flows.
+
+### Improved
+
+- Removed duplicated user-fetching responsibility from authentication flows.
+- Authentication state synchronization is now handled through a single reusable function.
+- Preserved existing async error propagation behavior.

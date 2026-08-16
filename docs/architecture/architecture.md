@@ -460,6 +460,69 @@ React re-renders
 ---
 
 
+---
+
+## Authentication User Synchronization
+
+The authentication context uses `refreshUser()` as the centralized operation for synchronizing the frontend authentication state with the backend.
+
+### `refreshUser()` Responsibility
+
+```text
+refreshUser()
+      │
+      ▼
+GET /api/v1/auth/me
+      │
+      ▼
+Backend verifies JWT
+      │
+      ▼
+Authenticated User
+      │
+      ▼
+setUser()
+      │
+      ▼
+AuthContext
+```
+
+
+--- 
+
+
+## Authentication Initialization
+
+
+Application Starts
+        │
+        ▼
+AuthProvider
+        │
+        ▼
+initializeAuth()
+        │
+        ▼
+refreshUser()
+        │
+        ▼
+GET /api/v1/auth/me
+        │
+   ┌────┴────┐
+   │         │
+Success     Error
+   │         │
+   ▼         ▼
+setUser()  Handle Error
+   │         │
+   └────┬────┘
+        ▼
+setIsLoading(false)
+
+
+---
+
+
 ## Logout flow
 
 
@@ -549,6 +612,38 @@ Zod Validation
 
 ---
 
+## Login Flow
+
+LoginForm
+    │
+    ▼
+AuthContext.login()
+    │
+    ▼
+loginService()
+    │
+    ▼
+POST /api/v1/auth/login
+    │
+    ▼
+JWT HttpOnly Cookie
+    │
+    ▼
+refreshUser()
+    │
+    ▼
+GET /api/v1/auth/me
+    │
+    ▼
+setUser()
+    │
+    ▼
+Authenticated UI
+
+
+---
+
+
 # Design Principles
 
 PROJECT GO currently follows:
@@ -567,6 +662,9 @@ PROJECT GO currently follows:
 - Single Responsibility Principle
 
 ---
+
+
+
 
 # Future Architecture
 

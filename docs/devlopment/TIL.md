@@ -1177,3 +1177,75 @@ Tested:
 
 
 ---
+
+
+
+### 2026-08-16
+
+## Authentication User Synchronization
+
+### `refreshUser()`
+
+- Replaced `fetchUser()` with `refreshUser()` in `AuthContext`.
+- `refreshUser()` is responsible for synchronizing the authenticated user with the backend.
+- It calls `GET /auth/me` and updates the `user` state.
+- The function is exposed through `AuthContext` so other components can refresh the authenticated user when required.
+
+---
+
+### Reusing Authentication Logic
+
+`refreshUser()` is now reused by multiple authentication flows:
+
+1. Application starts.
+2. `initializeAuth()` calls `refreshUser()`.
+3. `refreshUser()` requests `/auth/me`.
+4. Authenticated user data is stored in `AuthContext`.
+
+Login flow:
+
+1. User submits credentials.
+2. `login()` calls `loginService()`.
+3. Backend creates the authentication cookie.
+4. `login()` calls `refreshUser()`.
+5. `refreshUser()` retrieves the authenticated user.
+6. User state is updated.
+
+---
+
+### Error Propagation
+
+- `refreshUser()` does not handle errors internally.
+- Errors are allowed to propagate to the function that called it.
+- `initializeAuth()` handles initialization errors.
+- `LoginForm` handles login errors propagated through `login()`.
+
+This keeps `refreshUser()` reusable and prevents duplicate error-handling logic.
+
+---
+
+### Authentication Context
+
+`AuthContext` now exposes:
+
+- `user`
+- `isAuthenticated`
+- `isLoading`
+- `isLoggingOut`
+- `login()`
+- `logout()`
+- `signup()`
+- `refreshUser()`
+
+---
+
+### Key Concepts Learned
+
+- Reusable authentication operations
+- Error propagation through async functions
+- Separation of responsibilities
+- React Context as an authentication state boundary
+- Naming functions based on their responsibility
+
+
+---

@@ -68,7 +68,7 @@
 - ✅ Context `signup()`
 - ✅ Context `login()`
 - ✅ Context `logout()`
-- ⬜ Context `refreshUser()`
+- ✅ Context `refreshUser()`
 - ⬜ Navbar
 - ✅ Conditional navigation
 - ✅ Logout button

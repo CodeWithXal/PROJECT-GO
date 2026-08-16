@@ -9,7 +9,7 @@ function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    async function fetchUser(){
+    async function refreshUser(){
                 const currentUser = await getCurrentUser();
                 setUser(currentUser.data);
     }
@@ -17,7 +17,7 @@ function AuthProvider({ children }) {
     useEffect(() => {
         async function initializeAuth() {
             try {
-                await fetchUser();
+                await refreshUser();
             } catch (error) {
                 console.error(error);
             } finally {
@@ -30,7 +30,7 @@ function AuthProvider({ children }) {
 
     async function login(credentials){   
                 await loginService(credentials);
-                await fetchUser();
+                await refreshUser();
                 toast.success("Login Successful");
     }
 
@@ -68,7 +68,8 @@ function AuthProvider({ children }) {
                 isLoggingOut,
                 logout,
                 login,
-                signup
+                signup,
+                refreshUser
             }}
         >
             {children}
